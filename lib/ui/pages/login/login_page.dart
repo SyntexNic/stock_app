@@ -1,3 +1,4 @@
+import 'package:stock_app/constants/Theme.dart';
 import 'package:stock_app/ui/pages/register/register_page.dart';
 import 'package:flutter/material.dart';
 
@@ -70,92 +71,103 @@ class _Login extends State<Login> {
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: ListView(
-          children: [
-            SizedBox(height: screenHeight * .12),
-            const Text(
-              'Iniciar Sesion',
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: screenHeight * .01),
-            SizedBox(height: screenHeight * .12),
-            InputField(
-              onChanged: (value) {
-                setState(() {
-                  email = value;
-                });
-              },
-              labelText: 'Correo',
-              errorText: emailError,
-              keyboardType: TextInputType.emailAddress,
-              textInputAction: TextInputAction.next,
-              autoFocus: true,
-            ),
-            SizedBox(height: screenHeight * .025),
-            InputField(
-              onChanged: (value) {
-                setState(() {
-                  password = value;
-                });
-              },
-              onSubmitted: (val) => submit(),
-              labelText: 'Contraseña',
-              errorText: passwordError,
-              obscureText: true,
-              textInputAction: TextInputAction.next,
-            ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: () {},
-                child: const Text(
-                  'Olvidaste tu contraseña?',
-                  style: TextStyle(
-                    color: Colors.black,
+      body: ListView(
+        children: [
+          Container(
+            color: ColorsApp.primary,
+            width: 400,
+            height: 190,
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: Text(
+                    "StockApp",
+                    style: TextStyle(color: ColorsApp.white, fontSize: 24),
                   ),
                 ),
-              ),
+              ],
             ),
-            SizedBox(
-              height: screenHeight * .075,
-            ),
-            FormButton(
-              text: 'Log In',
-              onPressed: submit,
-            ),
-            SizedBox(
-              height: screenHeight * .15,
-            ),
-            TextButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const Register(),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              //mainAxisAlignment: MainAxisAlignment.start,
+
+              children: [
+                SizedBox(height: screenHeight * .05),
+                //padding: EdgeInsets.symmetric(horizontal: 50),
+                const Text(
+                  'Iniciar Sesion',
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              child: RichText(
-                text: const TextSpan(
-                  text: "¿No tienes cuenta?",
-                  style: TextStyle(color: Colors.black),
-                  children: [
-                    TextSpan(
-                      text: 'Crea un aquí',
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 4, 30, 71),
-                        fontWeight: FontWeight.bold,
-                      ),
+                SizedBox(height: screenHeight * .01),
+                SizedBox(height: screenHeight * .07),
+                InputField(
+                  onChanged: (value) {
+                    setState(() {
+                      email = value;
+                    });
+                  },
+                  labelText: 'Correo',
+                  errorText: emailError,
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                  autoFocus: true,
+                ),
+                SizedBox(height: screenHeight * .025),
+                InputField(
+                  onChanged: (value) {
+                    setState(() {
+                      password = value;
+                    });
+                  },
+                  onSubmitted: (val) => submit(),
+                  labelText: 'Contraseña',
+                  errorText: passwordError,
+                  obscureText: true,
+                  textInputAction: TextInputAction.next,
+                ),
+                SizedBox(
+                  height: screenHeight * .075,
+                ),
+                FormButton(
+                  text: 'Log In',
+                  onPressed: submit,
+                ),
+                SizedBox(
+                  height: screenHeight * .01,
+                ),
+                TextButton(
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const Register(),
                     ),
-                  ],
-                ),
-              ),
-            )
-          ],
-        ),
+                  ),
+                  child: RichText(
+                    text: const TextSpan(
+                      text: "¿No tienes cuenta?",
+                      style: TextStyle(color: Colors.black),
+                      children: [
+                        TextSpan(
+                          text: 'Crea un aquí',
+                          style: TextStyle(
+                            color: ColorsApp.primary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
       ),
     );
   }
@@ -174,6 +186,8 @@ class FormButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed as void Function()?,
       style: ElevatedButton.styleFrom(
+        fixedSize: Size.fromWidth(350),
+        backgroundColor: ColorsApp.primary,
         padding: EdgeInsets.symmetric(vertical: screenHeight * .02),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
@@ -218,13 +232,16 @@ class InputField extends StatelessWidget {
       textInputAction: textInputAction,
       obscureText: obscureText,
       decoration: InputDecoration(
-        labelText: labelText,
-        errorText: errorText,
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-      ),
+          hoverColor: ColorsApp.primary,
+          fillColor: ColorsApp.primary,
+          focusColor: ColorsApp.primary,
+          labelText: labelText,
+          errorText: errorText,
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          iconColor: ColorsApp.primary),
     );
   }
 }

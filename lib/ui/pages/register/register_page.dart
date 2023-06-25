@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:stock_app/constants/Theme.dart';
 
 class Register extends StatefulWidget {
   /// Callback for when this form is submitted successfully. Parameters are (email, password)
@@ -12,8 +12,8 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-  late String email, password, confirmPassword,name;
-  String? emailError, passwordError,nameError;
+  late String email, password, confirmPassword, name;
+  String? emailError, passwordError, nameError;
   Function(String? email, String? password, String? name)? get onSubmitted =>
       widget.onSubmitted;
 
@@ -78,7 +78,7 @@ class _RegisterState extends State<Register> {
   void submit() {
     if (validate()) {
       if (onSubmitted != null) {
-        onSubmitted!(email, password,name);
+        onSubmitted!(email, password, name);
       }
     }
   }
@@ -88,100 +88,121 @@ class _RegisterState extends State<Register> {
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: ListView(
-          children: [
-            SizedBox(height: screenHeight * .12),
-            const Text(
-              'Crear Cuenta',
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: screenHeight * .01),
-            SizedBox(height: screenHeight * .12),
-            InputField(
-              onChanged: (value) {
-                setState(() {
-                  email = value;
-                });
-              },
-              labelText: 'Nombre',
-              errorText: nameError,
-              keyboardType: TextInputType.name,
-              textInputAction: TextInputAction.next,
-              autoFocus: true,
-            ),
-            SizedBox(height: screenHeight * .025),
-            InputField(
-              onChanged: (value) {
-                setState(() {
-                  name = value;
-                });
-              },
-              labelText: 'Correo',
-              errorText: emailError,
-              keyboardType: TextInputType.emailAddress,
-              textInputAction: TextInputAction.next,
-              autoFocus: true,
-            ),
-            SizedBox(height: screenHeight * .025),
-            InputField(
-              onChanged: (value) {
-                setState(() {
-                  password = value;
-                });
-              },
-              labelText: 'Contraseña',
-              errorText: passwordError,
-              obscureText: true,
-              textInputAction: TextInputAction.next,
-            ),
-            SizedBox(height: screenHeight * .025),
-            InputField(
-              onChanged: (value) {
-                setState(() {
-                  confirmPassword = value;
-                });
-              },
-              onSubmitted: (value) => submit(),
-              labelText: 'Confirmar Contraseña',
-              errorText: passwordError,
-              obscureText: true,
-              textInputAction: TextInputAction.done,
-            ),
-            SizedBox(
-              height: screenHeight * .075,
-            ),
-            FormButton(
-              text: 'Crear Cuenta',
-              onPressed: submit,
-            ),
-            SizedBox(
-              height: screenHeight * .125,
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: RichText(
-                text: const TextSpan(
-                  text: "Ya tienes una cuenta? ",
-                  style: TextStyle(color: Colors.black),
-                  children: [
-                    TextSpan(
-                      text: 'Inicia Sesion',
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 4, 30, 71),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
+      body: ListView(
+        children: [
+          Container(
+            color: ColorsApp.primary,
+            width: 400,
+            height: 190,
+            padding: const EdgeInsets.symmetric(horizontal: 0),
+            //          margin: EdgeInsets.only(left: 20 ,right: 20),
+
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: Text(
+                    "StockApp",
+                    style: TextStyle(color: ColorsApp.white, fontSize: 24),
+                  ),
                 ),
-              ),
-            )
-          ],
-        ),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              //mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(height: screenHeight * .04),
+                const Text(
+                  'Crear Cuenta',
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: screenHeight * .01),
+                SizedBox(height: screenHeight * .05),
+                InputField(
+                  onChanged: (value) {
+                    setState(() {
+                      email = value;
+                    });
+                  },
+                  labelText: 'Nombre',
+                  errorText: nameError,
+                  keyboardType: TextInputType.name,
+                  textInputAction: TextInputAction.next,
+                  autoFocus: true,
+                ),
+                SizedBox(height: screenHeight * .025),
+                InputField(
+                  onChanged: (value) {
+                    setState(() {
+                      name = value;
+                    });
+                  },
+                  labelText: 'Correo',
+                  errorText: emailError,
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                  autoFocus: true,
+                ),
+                SizedBox(height: screenHeight * .025),
+                InputField(
+                  onChanged: (value) {
+                    setState(() {
+                      password = value;
+                    });
+                  },
+                  labelText: 'Contraseña',
+                  errorText: passwordError,
+                  obscureText: true,
+                  textInputAction: TextInputAction.next,
+                ),
+                SizedBox(height: screenHeight * .025),
+                InputField(
+                  onChanged: (value) {
+                    setState(() {
+                      confirmPassword = value;
+                    });
+                  },
+                  onSubmitted: (value) => submit(),
+                  labelText: 'Confirmar Contraseña',
+                  errorText: passwordError,
+                  obscureText: true,
+                  textInputAction: TextInputAction.done,
+                ),
+                SizedBox(
+                  height: screenHeight * .055,
+                ),
+                FormButton(
+                  text: 'Crear Cuenta',
+                  onPressed: submit,
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: RichText(
+                    text: const TextSpan(
+                      text: "Ya tienes una cuenta? ",
+                      style: TextStyle(color: Colors.black),
+                      children: [
+                        TextSpan(
+                          text: 'Inicia Sesion',
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 4, 30, 71),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -200,6 +221,8 @@ class FormButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed as void Function()?,
       style: ElevatedButton.styleFrom(
+        backgroundColor: ColorsApp.primary,
+        fixedSize: Size.fromWidth(350),
         padding: EdgeInsets.symmetric(vertical: screenHeight * .02),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
@@ -222,6 +245,7 @@ class InputField extends StatelessWidget {
   final TextInputAction? textInputAction;
   final bool autoFocus;
   final bool obscureText;
+
   const InputField(
       {this.labelText,
       this.onChanged,
