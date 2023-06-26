@@ -1,6 +1,8 @@
 import 'package:stock_app/constants/Theme.dart';
+import 'package:stock_app/ui/pages/home/home_page.dart';
 import 'package:stock_app/ui/pages/register/register_page.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Login extends StatefulWidget {
   /// Callback for when this form is submitted successfully. Parameters are (email, password)
@@ -77,14 +79,15 @@ class _Login extends State<Login> {
             color: ColorsApp.primary,
             width: 400,
             height: 190,
-            child: const Column(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Center(
-                  child: Text(
-                    "StockApp",
-                    style: TextStyle(color: ColorsApp.white, fontSize: 24),
-                  ),
+                  child: Text("StockApp",
+                      style: GoogleFonts.getFont(
+                        'Lato',
+                        color: ColorsApp.white,
+                      )),
                 ),
               ],
             ),
@@ -97,13 +100,12 @@ class _Login extends State<Login> {
               children: [
                 SizedBox(height: screenHeight * .05),
                 //padding: EdgeInsets.symmetric(horizontal: 50),
-                const Text(
-                  'Iniciar Sesion',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                Text('Iniciar Sesion',
+                    style: GoogleFonts.getFont(
+                      'Lato',
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    )),
                 SizedBox(height: screenHeight * .01),
                 SizedBox(height: screenHeight * .07),
                 InputField(
@@ -136,30 +138,31 @@ class _Login extends State<Login> {
                 ),
                 FormButton(
                   text: 'Log In',
-                  onPressed: submit,
+                  onPressed: _onButtonPressed,
+                  //onpressed: submit,
+                  /* Esto valida si los datos enviados son correctos, estan desactivados pa mientras */
+
+                  //onPressed: submit,
                 ),
                 SizedBox(
                   height: screenHeight * .01,
                 ),
                 TextButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const Register(),
-                    ),
-                  ),
+                  onPressed: () => Navigator.pushNamed(context, '/Register'),
                   child: RichText(
-                    text: const TextSpan(
+                    text: TextSpan(
                       text: "¿No tienes cuenta?",
-                      style: TextStyle(color: Colors.black),
+                      style: GoogleFonts.getFont(
+                        'Lato',
+                        color: ColorsApp.black,
+                      ),
                       children: [
                         TextSpan(
-                          text: 'Crea un aquí',
-                          style: TextStyle(
-                            color: ColorsApp.primary,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                            text: 'Crea un aquí',
+                            style: GoogleFonts.getFont(
+                              'Lato',
+                              color: ColorsApp.primary,
+                            )),
                       ],
                     ),
                   ),
@@ -171,11 +174,42 @@ class _Login extends State<Login> {
       ),
     );
   }
+
+  void _onButtonPressed() {
+    // Validación
+    if (validate()) {
+      // Navegación a otra página
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    } else {
+      // Mostrar mensaje de error
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Los datos no son válidos.'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Cerrar'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
 }
 
 class FormButton extends StatelessWidget {
   final String text;
   final Function? onPressed;
+
   const FormButton({this.text = '', this.onPressed, Key? key})
       : super(key: key);
 

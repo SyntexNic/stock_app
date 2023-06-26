@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stock_app/constants/Theme.dart';
+import 'package:stock_app/ui/pages/home/home_page.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Register extends StatefulWidget {
   /// Callback for when this form is submitted successfully. Parameters are (email, password)
@@ -45,7 +47,8 @@ class _RegisterState extends State<Register> {
         r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
 
     bool isValid = true;
-    if (email.isEmpty || !emailExp.hasMatch(email)) {
+    // hay que corregir esa vaina comentada xd
+    if (email.isEmpty /*|| !emailExp.hasMatch(email)*/) {
       setState(() {
         emailError = 'Correo Invalido';
       });
@@ -97,13 +100,16 @@ class _RegisterState extends State<Register> {
             padding: const EdgeInsets.symmetric(horizontal: 0),
             //          margin: EdgeInsets.only(left: 20 ,right: 20),
 
-            child: const Column(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Center(
                   child: Text(
                     "StockApp",
-                    style: TextStyle(color: ColorsApp.white, fontSize: 24),
+                    style: GoogleFonts.getFont(
+                      'Lato',
+                      color: ColorsApp.white,
+                    ),
                   ),
                 ),
               ],
@@ -115,13 +121,11 @@ class _RegisterState extends State<Register> {
               //mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 SizedBox(height: screenHeight * .04),
-                const Text(
-                  'Crear Cuenta',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                Text('Crear Cuenta',
+                    style: GoogleFonts.getFont(
+                      'Lato',
+                      color: ColorsApp.white,
+                    )),
                 SizedBox(height: screenHeight * .01),
                 SizedBox(height: screenHeight * .05),
                 InputField(
@@ -178,21 +182,25 @@ class _RegisterState extends State<Register> {
                   height: screenHeight * .055,
                 ),
                 FormButton(
-                  text: 'Crear Cuenta',
-                  onPressed: submit,
+                  text: 'Crear Cuenta', onPressed: _onButtonPressed,
+                  /* Esto valida si los datos enviados son correctos, estan desactivados pa mientras */
+                  //onPressed: submit,
                 ),
                 TextButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () => Navigator.pushNamed(context, '/Login'),
                   child: RichText(
-                    text: const TextSpan(
+                    text: TextSpan(
                       text: "Ya tienes una cuenta? ",
-                      style: TextStyle(color: Colors.black),
+                      style: GoogleFonts.getFont(
+                        'Lato',
+                        color: ColorsApp.black,
+                      ),
                       children: [
                         TextSpan(
                           text: 'Inicia Sesion',
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 4, 30, 71),
-                            fontWeight: FontWeight.bold,
+                          style: GoogleFonts.getFont(
+                            'Lato',
+                            color: ColorsApp.primary,
                           ),
                         ),
                       ],
@@ -206,11 +214,42 @@ class _RegisterState extends State<Register> {
       ),
     );
   }
+
+  void _onButtonPressed() {
+    // Validación
+    if (validate()) {
+      // Navegación a otra página
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    } else {
+      // Mostrar mensaje de error
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Los datos no son válidos.'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Cerrar'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
 }
 
 class FormButton extends StatelessWidget {
   final String text;
   final Function? onPressed;
+
   const FormButton({this.text = '', this.onPressed, Key? key})
       : super(key: key);
 
