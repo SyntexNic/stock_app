@@ -28,6 +28,8 @@ class _BillsState extends State<Bills> {
     return Scaffold(
         appBar: AppBar(
           title: const Text("Facturas"),
+          backgroundColor: ColorsApp.primary,
+          titleTextStyle: GoogleFonts.getFont('Lato', fontSize: 20),
         ),
         body: ListView.builder(//Constructor del las facturas
             itemCount: invoices.length,
@@ -52,12 +54,13 @@ class _BillsState extends State<Bills> {
       //Mostrar la factura
               return   Column(
         children: [
+          const SizedBox(height: 10,),
            if (index == 0 ||
               (index > 0 && 
                   invoices[index - 1].time.day !=
                       invoice.time.day))
             Container(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
             
               decoration: const BoxDecoration(
                   color: ColorsApp.primary,
@@ -74,12 +77,18 @@ class _BillsState extends State<Bills> {
                 'Lato',
                 fontSize: 16,
                 color: Colors.white
-              
-              )
-              
+              )       
               ),
             ),
-            Card(
+            Container(
+               decoration: const BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: ColorsApp.primary,
+                    width: 1.0,
+                  ),
+                ),
+              ),
                 child: ListTile(
                   title: Text('${invoice.number}',
                   style: GoogleFonts.getFont(
@@ -90,7 +99,8 @@ class _BillsState extends State<Bills> {
                   subtitle: Text("${formattedTime}",
                   style: GoogleFonts.getFont(
                     'Lato',
-                    fontSize: 24
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold
                   )
                   ),
                   trailing: Text("\$${invoice.amount}",
@@ -99,16 +109,18 @@ class _BillsState extends State<Bills> {
                     fontSize: 24
                   )
                   ),
-                  textColor: ColorsApp.primary,
-                 
+                  textColor: ColorsApp.primary, 
+                 ),
                 ),
-                )
+                
+                
               ]);
             },
         ),
         floatingActionButton: FloatingActionButton(
+          backgroundColor: ColorsApp.primary,
           onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=> AddBills())),
-         child: const Icon(Icons.add),
+         child: const Icon(Icons.add,size: 40,),
         ),
         backgroundColor: ColorsApp.backgroundColor,
     );

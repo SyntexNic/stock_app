@@ -10,12 +10,19 @@ class AddBills extends StatefulWidget {
   @override
   State<AddBills> createState() => _AddBillsState();
 }
+
 class _AddBillsState extends State<AddBills> {
   String currentDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
+  TextEditingController controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    controller.text=currentDate;
     return Scaffold(
-      appBar: AppBar(title: const Text("Facturacion")),
+      appBar: AppBar(
+        title: const Text("Facturacion"),
+        backgroundColor: ColorsApp.primary,
+        titleTextStyle: GoogleFonts.getFont('Lato', fontSize: 20),
+        ),
       backgroundColor: ColorsApp.backgroundColor,
       body: Container(
         padding: EdgeInsets.all(20.0),
@@ -23,75 +30,93 @@ class _AddBillsState extends State<AddBills> {
           children: [
             Row(
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [ 
-                    Text(
-                      "Número de Factura",
-                      style: GoogleFonts.getFont(
-                        'Lato',
-                        color: ColorsApp.primary,
-                        fontSize: 18,
-                        
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10
-                      ),
-                       const SizedBox(
-                          width: 150,
-                          height: 50,
-                         child: TextField(
-                          readOnly: true,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(color: ColorsApp.primary)
-                            ),
-                           fillColor: ColorsApp.white,
-                            filled: true
-                          ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [ 
+                      Text(
+                        "N° Factura",
+                        style: GoogleFonts.getFont(
+                          'Lato',
+                          color: ColorsApp.primary,
+                          fontSize: 18,
+                          
                         ),
-                       )
-                  ],
+                      ),
+                      const SizedBox(
+                        height: 10
+                        ),
+                         const SizedBox(
+                           
+                            height: 50,
+                           child: TextField(
+                            enabled: false,
+                            readOnly: true,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(color: ColorsApp.primary)
+                              ),
+                             fillColor: ColorsApp.white,
+                              filled: true
+                            ),
+                          ),
+                         )
+                    ],
+                  ),
                 ),
                 const SizedBox(width: 50,),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Fecha",
-                      style: GoogleFonts.getFont(
-                        'Lato',
-                        fontSize: 18,
-                      ),
-                    ),
-                    const SizedBox(height: 10,),
-                     SizedBox(
-                          width: 150,
-                          height: 50,
-                         child: TextField(
-                          readOnly: true,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(color: ColorsApp.primary)
-                            ),
-                            fillColor: ColorsApp.white,
-                            filled: true
-                          ),
-                          style: GoogleFonts.getFont('Lato',color: ColorsApp.primary,),
-                          controller: TextEditingController(
-                            text: currentDate,
-                          
-                          ),
-                          
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Fecha",
+                        style: GoogleFonts.getFont(
+                          'Lato',
+                          fontSize: 18,
                         ),
-                       )
-                  ],
+                      ),
+                      const SizedBox(height: 10,),
+                       SizedBox(
+                            height: 50,
+                           child: TextField(
+                             enabled: false,
+                            readOnly: true,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(color: ColorsApp.primary)
+                              ),
+                              fillColor: ColorsApp.white,
+                              filled: true,
+                            ),
+                            style: GoogleFonts.getFont('Lato',color: ColorsApp.primary, fontSize: 16
+                            , fontStyle: FontStyle.italic),
+                            controller: controller
+                            
+                          ),
+                         )
+                    ],
+                  ),
                 ),
               ],
             ),
-           Spacer(),
-            SaveButton(),
+           const SizedBox(height: 10,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                    "Articulos",
+                    style: GoogleFonts.getFont(
+                      'Lato',
+                      color: ColorsApp.primary,
+                      fontSize: 18
+                    ),
+                ),
+              ],
+            ),
+            DetailsContainer(),
+           const Spacer(),
+            const SaveButton(),
           ],
         ),
       ),
@@ -124,6 +149,25 @@ class SaveButton extends StatelessWidget {
           style: GoogleFonts.getFont("Lato", fontSize: 20),
         
         ),
+      ),
+    );
+  }
+}
+
+class DetailsContainer extends StatelessWidget {
+  const DetailsContainer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+     double screenHeight = MediaQuery.of(context).size.height;
+    return ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+      child: Container(
+          color: ColorsApp.white,
+          padding: EdgeInsets.all(20.0),
+          height: screenHeight*0.45,
+          
+    
       ),
     );
   }
