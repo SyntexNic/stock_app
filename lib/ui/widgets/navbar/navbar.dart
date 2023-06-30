@@ -16,7 +16,7 @@ class Navbar extends StatelessWidget {
             currentAccountPicture: CircleAvatar(
               child: ClipOval(child: Image.asset('images/logo.png')),
             ),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 color: Colors.blue,
                 image: DecorationImage(
                     image: AssetImage('images/back.jpg'), fit: BoxFit.cover)),

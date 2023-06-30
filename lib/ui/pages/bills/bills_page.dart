@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:stock_app/constants/Theme.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:stock_app/ui/pages/bills/add_bills_page.dart';
+
 class Bills extends StatefulWidget {
   const Bills({super.key});
   @override
@@ -25,7 +29,7 @@ class _BillsState extends State<Bills> {
         appBar: AppBar(
           title: const Text("Facturas"),
         ),
-        body: ListView.builder(
+        body: ListView.builder(//Constructor del las facturas
             itemCount: invoices.length,
             itemBuilder: (context,index){
               final formatter = DateFormat('h:mm a');
@@ -54,13 +58,9 @@ class _BillsState extends State<Bills> {
                       invoice.time.day))
             Container(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-              child: Text(dateLabel,
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-              ),),
+            
               decoration: const BoxDecoration(
-                  color: Color.fromARGB(255, 7, 38, 85),
+                  color: ColorsApp.primary,
                   shape: BoxShape.rectangle,
             borderRadius: BorderRadius.horizontal(
               // Utilizamos el método Radius.elliptical para definir un óvalo alargado horizontalmente
@@ -68,29 +68,54 @@ class _BillsState extends State<Bills> {
               right: Radius.elliptical(140, 80),
             ),
               ),
+              child: Text(dateLabel,
+              style: 
+              GoogleFonts.getFont(
+                'Lato',
+                fontSize: 16,
+                color: Colors.white
+              
+              )
+              
+              ),
             ),
             Card(
                 child: ListTile(
-                  title: Text('${invoice.number}'),
-                  subtitle: Text("${formattedTime}"),
+                  title: Text('${invoice.number}',
+                  style: GoogleFonts.getFont(
+                    'Lato',
+                    fontSize: 16
+                  )
+                  ),
+                  subtitle: Text("${formattedTime}",
+                  style: GoogleFonts.getFont(
+                    'Lato',
+                    fontSize: 24
+                  )
+                  ),
                   trailing: Text("\$${invoice.amount}",
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
-                  )),
+                  style: GoogleFonts.getFont(
+                    'Lato',
+                    fontSize: 24
+                  )
+                  ),
+                  textColor: ColorsApp.primary,
+                 
                 ),
                 )
-              
               ]);
             },
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: ()=> print("presionado"),
+          onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=> AddBills())),
          child: const Icon(Icons.add),
         ),
+        backgroundColor: ColorsApp.backgroundColor,
     );
   }
 }
+
+
 class Invoice {
   final String number;
   final DateTime time;
