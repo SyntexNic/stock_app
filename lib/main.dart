@@ -1,8 +1,9 @@
+import 'package:stock_app/ui/pages/add_product/add_Product_page.dart';
 import 'package:stock_app/ui/pages/home/home_page.dart';
 import 'package:stock_app/ui/pages/inventory/inventory_page.dart';
 import 'package:stock_app/ui/pages/login/login_page.dart';
-import 'package:stock_app/ui/pages/home/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:stock_app/ui/pages/proctuct_detail/product_detail_page.dart';
 import 'package:stock_app/ui/pages/register/register_page.dart';
 
 void main() {
@@ -22,7 +23,9 @@ class MyApp extends StatelessWidget {
         '/': (context) => const HomePage(),
         '/Login': (context) => const Login(),
         '/Register': (context) => const Register(),
-        '/Inventory': (context) => const Inventory()
+        '/Inventory': (context) => const Inventory(),
+        '/AddProduct': (context) => const AddProduct(),
+        '/DetailsProduct': (context) => const PDetails()
       },
     );
   }
