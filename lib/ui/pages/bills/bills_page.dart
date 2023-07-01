@@ -41,7 +41,6 @@ class _BillsState extends State<Bills> {
 
       if(response.statusCode == 200){
         final jsonresponse = jsonDecode(response.body);
-        print(jsonresponse);
         final accountInvoicesResponse = AccountInvoicesResponse.fromJson(jsonresponse);
 
         setState(() {
