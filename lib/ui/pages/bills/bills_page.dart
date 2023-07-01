@@ -132,13 +132,14 @@ class _BillsState extends State<Bills> {
             //Dibujamos el container de la factura
             ListView.builder(
               shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               itemCount: invoice.invoices!.length,
               itemBuilder: (context,invoiceIndex)
               {
                 final dateinvoice = invoice.invoices![invoiceIndex];
                 final formattedTime = dateinvoice.time;
                 final no = dateinvoice.no;
+                final idF = dateinvoice.id;
                 final total= dateinvoice.total;
 
                   return Container(
@@ -171,7 +172,7 @@ class _BillsState extends State<Bills> {
                         )
                         ),
                         textColor: ColorsApp.primary, 
-                        onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=> BillDetail()))
+                        onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=> BillDetail(id: idF!,)))
                       ),
                       );
                 },
