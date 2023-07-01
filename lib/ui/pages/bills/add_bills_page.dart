@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:stock_app/constants/Theme.dart';
-import 'package:stock_app/ui/pages/login/login_page.dart';
 
 class AddBills extends StatefulWidget {
   const AddBills({super.key});
@@ -12,11 +11,9 @@ class AddBills extends StatefulWidget {
 }
 
 class _AddBillsState extends State<AddBills> {
-  String currentDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
-  TextEditingController controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    controller.text=currentDate;
+   
     return Scaffold(
       appBar: AppBar(
         title: const Text("Facturacion"),
@@ -25,10 +22,84 @@ class _AddBillsState extends State<AddBills> {
         ),
       backgroundColor: ColorsApp.backgroundColor,
       body: Container(
-        padding: EdgeInsets.all(20.0),
-        child: Column(
+        padding: const EdgeInsets.all(20.0),
+        child: const Column(
           children: [
-            Row(
+             DetailsDrawer(),
+             Spacer(),
+             SaveButton(),
+          ],
+        ),
+        
+      ),
+    );
+  }
+}
+
+
+class SaveButton extends StatelessWidget {
+
+  const SaveButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: ElevatedButton(
+        onPressed: ()=>print("Presionado"),
+        style: ElevatedButton.styleFrom(
+          fixedSize: const  Size.fromWidth(350),
+          minimumSize: const Size.fromHeight(60),
+          backgroundColor: ColorsApp.primary,
+          shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+    
+        ),
+        child: Text(
+          "Guardar",
+          style: GoogleFonts.getFont("Lato", fontSize: 20),
+        
+        ),
+      ),
+    );
+  }
+}
+
+class DetailsContainer extends StatelessWidget {
+  const DetailsContainer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+     double screenHeight = MediaQuery.of(context).size.height;
+    return ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+      child: Container(
+          color: ColorsApp.white,
+          padding: const EdgeInsets.all(20.0),
+          height: screenHeight*0.45,
+          
+    
+      ),
+    );
+  }
+}
+class DetailsDrawer extends StatefulWidget {
+  const DetailsDrawer({super.key});
+
+  @override
+  State<DetailsDrawer> createState() => _DetailsDrawerState();
+}
+
+class _DetailsDrawerState extends State<DetailsDrawer> {
+   String currentDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
+   TextEditingController controller = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+     controller.text=currentDate;
+    return  Column(
+          children: [
+             Row(
               children: [
                 Expanded(
                   child: Column(
@@ -114,61 +185,8 @@ class _AddBillsState extends State<AddBills> {
                 ),
               ],
             ),
-            DetailsContainer(),
-           const Spacer(),
-            const SaveButton(),
+             const DetailsContainer(),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-
-class SaveButton extends StatelessWidget {
-
-  const SaveButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: ElevatedButton(
-        onPressed: ()=>print("Presionado"),
-        style: ElevatedButton.styleFrom(
-          fixedSize: const  Size.fromWidth(350),
-          minimumSize: const Size.fromHeight(60),
-          backgroundColor: ColorsApp.primary,
-          shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-    
-        ),
-        child: Text(
-          "Guardar",
-          style: GoogleFonts.getFont("Lato", fontSize: 20),
-        
-        ),
-      ),
-    );
-  }
-}
-
-class DetailsContainer extends StatelessWidget {
-  const DetailsContainer({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-     double screenHeight = MediaQuery.of(context).size.height;
-    return ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-      child: Container(
-          color: ColorsApp.white,
-          padding: EdgeInsets.all(20.0),
-          height: screenHeight*0.45,
-          
-    
-      ),
-    );
+        );
   }
 }

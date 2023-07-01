@@ -32,7 +32,7 @@ class Navbar extends StatelessWidget {
             title: Text('Facturas'),
             onTap: () {
               Navigator.pop(context);
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>Bills()));
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>Bills(accountId: "649f6525660a43f2fc857eb3",)));
             },
           ),
           Divider(),
