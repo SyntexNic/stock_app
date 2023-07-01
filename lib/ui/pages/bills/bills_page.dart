@@ -21,7 +21,7 @@ final yesterday = DateTime(now.year, now.month, now.day - 1); // Fecha de ayer
 
 
 class _BillsState extends State<Bills> {
- // bool isLoading=true;
+ bool isLoading=true;
   List<Result> invoices=[];
   @override 
   void initState() {
@@ -46,7 +46,7 @@ class _BillsState extends State<Bills> {
 
         setState(() {
           invoices = accountInvoicesResponse.data?.result??[];
-          //isLoading=false;
+          isLoading=false;
         });
       }else{
         print('Request failed with status: ${response.statusCode}');
@@ -56,16 +56,21 @@ class _BillsState extends State<Bills> {
       }
 
   }
+  
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
         appBar: AppBar(
           title: const Text("Facturas"),
           backgroundColor: ColorsApp.primary,
           titleTextStyle: GoogleFonts.getFont('Lato', fontSize: 20),
         ),
-        body: invoices.isEmpty?
+        body: isLoading? const Center(
+          child: CircularProgressIndicator(),
+        )
+        : invoices.isEmpty?
             Center(
               child: Text("No hay facturas disponibles",
               style: GoogleFonts.getFont(
@@ -78,12 +83,13 @@ class _BillsState extends State<Bills> {
           : ListView.builder(//Constructor del las facturas
             itemCount: invoices.length,
             itemBuilder: (context,index){
+              
               final invoice = invoices[index];
-              final formatter = DateFormat('h:mm a');
               final dateformatter= DateFormat('dd/MM/yyyy');
                final invoiceDateTime =dateformatter.parse(invoice.date!); //Obtén la fecha y hora de la primera factura
-               final formattedTime = invoice.invoices![index].time!;
+               //---------------------------------
                // Verificar la fecha de la factura
+
           String dateLabel;
           if (invoiceDateTime.year == now.year &&
               invoiceDateTime.month == now.month &&
@@ -96,12 +102,13 @@ class _BillsState extends State<Bills> {
           } else {
             dateLabel = DateFormat('dd/MM/yyyy').format(invoiceDateTime);
           }
-      //Mostrar la factura
+          //Mostrar la factura
               return   Column(
         children: [
           const SizedBox(height: 10,),
            if (index == 0 ||
-              (index > 0 && invoices[index - 1].date != invoiceDateTime))
+              (index > 0 && invoices[index - 1].date != invoiceDateTime ))
+              //Dibujamos el container de la fecha 
             Container(
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
             
@@ -122,40 +129,54 @@ class _BillsState extends State<Bills> {
                 color: Colors.white
               )       
               ),
+            ), 
+            //Dibujamos el container de la factura
+            ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: invoice.invoices!.length,
+              itemBuilder: (context,invoiceIndex)
+              {
+                final dateinvoice = invoice.invoices![invoiceIndex];
+                final formattedTime = dateinvoice.time;
+                final no = dateinvoice.no;
+                final total= dateinvoice.total;
+
+                  return Container(
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: ColorsApp.primary,
+                          width: 1.0,
+                        ),
+                      ),
+                    ),
+                      child: ListTile(
+                        title: Text('$no',
+                        style: GoogleFonts.getFont(
+                          'Lato',
+                          fontSize: 16
+                        )
+                        ),
+                        subtitle: Text("$formattedTime",
+                        style: GoogleFonts.getFont(
+                          'Lato',
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold
+                        )
+                        ),
+                        trailing: Text("\$$total",
+                        style: GoogleFonts.getFont(
+                          'Lato',
+                          fontSize: 24
+                        )
+                        ),
+                        textColor: ColorsApp.primary, 
+                        onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=> BillDetail()))
+                      ),
+                      );
+                },
             ),
-            Container(
-               decoration: const BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: ColorsApp.primary,
-                    width: 1.0,
-                  ),
-                ),
-              ),
-                child: ListTile(
-                  title: Text('${invoice.invoices![index].no}',
-                  style: GoogleFonts.getFont(
-                    'Lato',
-                    fontSize: 16
-                  )
-                  ),
-                  subtitle: Text("${formattedTime}",
-                  style: GoogleFonts.getFont(
-                    'Lato',
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold
-                  )
-                  ),
-                  trailing: Text("\$${invoice.totalAmount}",
-                  style: GoogleFonts.getFont(
-                    'Lato',
-                    fontSize: 24
-                  )
-                  ),
-                  textColor: ColorsApp.primary, 
-                  onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=> BillDetail()))
-                 ),
-                ),
                 
                 
               ]);
