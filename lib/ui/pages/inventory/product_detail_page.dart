@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:stock_app/Response/Products/AccountProductsResponse.dart';
 import 'package:stock_app/constants/Theme.dart';
-import 'package:stock_app/ui/pages/register/register_page.dart';
+import 'package:stock_app/models/products.dart';
+import 'package:stock_app/ui/pages/inventory/inventory_page.dart';
+import 'package:stock_app/ui/pages/login/login_page.dart';
 
-class AddProduct extends StatefulWidget {
-  const AddProduct({super.key});
+class PDetails extends StatefulWidget {
+  const PDetails({super.key});
 
   @override
-  State<AddProduct> createState() => _AddProductState();
+  State<PDetails> createState() => _PDetailsState();
 }
 
-class _AddProductState extends State<AddProduct> {
+class _PDetailsState extends State<PDetails> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
+
+    final data =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
 
     return Scaffold(
         appBar: AppBar(
@@ -21,7 +27,7 @@ class _AddProductState extends State<AddProduct> {
           title: Container(
               margin: const EdgeInsets.only(left: 70),
               child: Text(
-                'Agregar',
+                'Detalles',
                 style: GoogleFonts.getFont(
                   'Lato',
                 ),
@@ -107,11 +113,11 @@ class _AddProductState extends State<AddProduct> {
                           child: Column(
                             children: [
                               InputField(
-                                labelText: 'precio',
+                                labelText: 'codigo: ${data['code']}',
                               ),
                               SizedBox(height: screenHeight * .030),
                               InputField(
-                                labelText: 'cantidad',
+                                labelText: 'cantidad${data['stock']}',
                               )
                             ],
                           ),
@@ -121,38 +127,26 @@ class _AddProductState extends State<AddProduct> {
             Expanded(
                 flex: 4,
                 child: Container(
+                  padding: EdgeInsets.only(left: 10, right: 10),
                   child: SingleChildScrollView(
                       child: Column(
                     children: [
                       Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: const Color.fromARGB(255, 216, 214, 214),
+                        ),
                         child: Padding(
                           padding: EdgeInsets.only(
                               top: 5, bottom: 20, left: 16, right: 16),
                           child: Column(
                             children: [
-                              InputField(
-                                labelText: 'precio',
-                              ),
+                              Text("Nombre: ${data['nombre']}"),
                               SizedBox(height: screenHeight * .030),
-                              InputField(
-                                labelText: 'cantidad',
-                              ),
+                              Text("Descripcion: ${data['desc']}"),
                               SizedBox(height: screenHeight * .030),
-                              InputField(
-                                labelText: 'precio',
-                              ),
+                              Text("precio:${data['price']}"),
                               SizedBox(height: screenHeight * .030),
-                              InputField(
-                                labelText: 'cantidad',
-                              ),
-                              SizedBox(height: screenHeight * .030),
-                              InputField(
-                                labelText: 'precio',
-                              ),
-                              SizedBox(height: screenHeight * .030),
-                              InputField(
-                                labelText: 'cantidad',
-                              ),
                             ],
                           ),
                         ),
@@ -165,18 +159,21 @@ class _AddProductState extends State<AddProduct> {
                 child: Container(
                     padding:
                         const EdgeInsets.only(left: 16, right: 16, top: 16),
-                    child: Column(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         FormButton(
-                          text: 'Agregar',
+                          text: 'Editar',
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/EditProduct');
+                          },
+                        ),
+                        FormButton1(
+                          text: 'Borrar',
                           onPressed: () {
                             Navigator.pushNamed(context, '/Inventory');
                           },
-                          //onpressed: submit,
-                          /* Esto valida si los datos enviados son correctos, estan desactivados pa mientras */
-
-                          //onPressed: submit,
-                        ),
+                        )
                       ],
                     )))
           ],
@@ -198,8 +195,37 @@ class FormButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed as void Function()?,
       style: ElevatedButton.styleFrom(
-        fixedSize: Size.fromWidth(350),
+        fixedSize: Size.fromWidth(150),
         backgroundColor: ColorsApp.primary,
+        padding: EdgeInsets.symmetric(vertical: screenHeight * .02),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(fontSize: 16),
+      ),
+    );
+  }
+}
+
+class FormButton1 extends StatelessWidget {
+  final String text;
+  final Function? onPressed;
+
+  const FormButton1({this.text = '', this.onPressed, Key? key})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    return ElevatedButton(
+      onPressed: onPressed as void Function()?,
+      style: ElevatedButton.styleFrom(
+        fixedSize: Size.fromWidth(150),
+        backgroundColor: ColorsApp.red,
         padding: EdgeInsets.symmetric(vertical: screenHeight * .02),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
