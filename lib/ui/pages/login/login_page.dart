@@ -1,8 +1,12 @@
+import 'dart:convert';
+
+import 'package:stock_app/Response/Login/LoginResponse.dart';
 import 'package:stock_app/constants/Theme.dart';
 import 'package:stock_app/ui/pages/home/home_page.dart';
 import 'package:stock_app/ui/pages/register/register_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
 
 class Login extends StatefulWidget {
   /// Callback for when this form is submitted successfully. Parameters are (email, password)
@@ -13,11 +17,18 @@ class Login extends StatefulWidget {
   State<Login> createState() => _Login();
 }
 
+//https://stockapi-vmuc.onrender.com/account?email=<syntexnic@gmail.com>&pass=<password>
+
 class _Login extends State<Login> {
   late String email, password;
   String? emailError, passwordError;
   Function(String? email, String? password)? get onSubmitted =>
       widget.onSubmitted;
+
+  bool isLoading = true;
+  Result? account;
+  //String? account;
+  String? AccountId;
 
   @override
   void initState() {
@@ -27,6 +38,47 @@ class _Login extends State<Login> {
 
     emailError = null;
     passwordError = null;
+    fetchAccount();
+  }
+
+  Future<void> fetchAccount() async {
+    final url =
+        'https://stockapi-vmuc.onrender.com/account?email=$email>&pass=$password';
+    final headers = {
+      'Content-Type': 'application/json',
+      'api-key': '\$yntexNicApiKey23',
+    };
+    try {
+      final response = await http.get(Uri.parse(url), headers: headers);
+
+      if (response.statusCode == 200) {
+        final jsonresponse = jsonDecode(response.body);
+        final loginResponse = LoginResponse.fromJson(jsonresponse);
+
+        setState(() {
+          //account = loginResponse.data?.result ?? [];
+          account = loginResponse.data?.result;
+
+          if (account!.credentialsCorrect!) {
+            final String? accountId = account?.accountId;
+          } else {
+            print("strt");
+            final String? accountId = account?.accountId;
+            print(accountId);
+          }
+          //AccountId = account?.accountId;
+
+          isLoading = false;
+          print('Request gg with status: ${response.statusCode}');
+
+          print('${account}');
+        });
+      } else {
+        print('Request failed with status: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error fetching data: $error');
+    }
   }
 
   void resetErrorText() {
@@ -179,6 +231,7 @@ class _Login extends State<Login> {
     // Validación
     if (validate()) {
       // Navegación a otra página
+      fetchAccount();
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => HomePage()),

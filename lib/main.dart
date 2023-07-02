@@ -1,3 +1,4 @@
+import 'package:stock_app/ui/pages/bussines/bussines.dart';
 import 'package:stock_app/ui/pages/inventory/add_Product_page.dart';
 import 'package:stock_app/ui/pages/inventory/edit_product_page.dart';
 import 'package:stock_app/ui/pages/home/home_page.dart';
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
         '/AddProduct': (context) => const AddProduct(),
         '/DetailsProduct': (context) => const PDetails(),
         '/EditProduct': (context) => const EditProduct(),
+        'empresa': (context) => const Bussines(),
       },
     );
   }
