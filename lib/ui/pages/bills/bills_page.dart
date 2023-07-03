@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -18,6 +19,8 @@ class Bills extends StatefulWidget {
 
 final now = DateTime.now(); // Fecha y hora actual
 final yesterday = DateTime(now.year, now.month, now.day - 1); // Fecha de ayer
+List<int> numbers = [];
+int highestNumber=0; 
 
 
 class _BillsState extends State<Bills> {
@@ -60,6 +63,7 @@ class _BillsState extends State<Bills> {
   @override
   Widget build(BuildContext context) {
     
+
     return Scaffold(
         appBar: AppBar(
           title: const Text("Facturas"),
@@ -142,6 +146,10 @@ class _BillsState extends State<Bills> {
                 final idF = dateinvoice.id;
                 final total= dateinvoice.total;
 
+                numbers.add(int.parse(no!));
+                highestNumber = findHighestNumber(numbers);
+
+
                   return Container(
                     decoration: const BoxDecoration(
                       border: Border(
@@ -176,6 +184,8 @@ class _BillsState extends State<Bills> {
                       ),
                       );
                 },
+
+                
             ),
                 
                 
@@ -184,11 +194,22 @@ class _BillsState extends State<Bills> {
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: ColorsApp.primary,
-          onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=>  AddBills())),
+          onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=>  AddBills(no: (highestNumber+1).toString(),))),
          child: const Icon(Icons.add,size: 40,),
         ),
         backgroundColor: ColorsApp.backgroundColor,
     );
+    
   }
+
+  int findHighestNumber(List<int> numbers) {
+  int? highestNumber;
+  for (int number in numbers) {
+    if (highestNumber == null || number > highestNumber) {
+      highestNumber = number;
+    }
+  }
+  return highestNumber ?? 0; // Si la lista está vacía, se retorna 0 como valor predeterminado
+}
 }
 

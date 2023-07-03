@@ -87,7 +87,7 @@ class DetailsContainer extends StatelessWidget {
                             ),
                       ),
                       trailing: Text(
-                        "${subtotal1}",
+                        "\$${subtotal1}",
                         style: GoogleFonts.getFont(
                               'Lato',
                               fontSize: 16,
@@ -271,7 +271,7 @@ class _DetailsDrawerState extends State<DetailsDrawer> {
              Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text("Total: ${invoiceData?.total}",
+                Text("Total: \$${invoiceData?.total}",
                   style: GoogleFonts.getFont(
                     'Lato',
                     fontSize: 24,

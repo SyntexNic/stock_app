@@ -8,6 +8,8 @@ class ColorsApp {
   static const Color primary = Color.fromARGB(255, 4, 30, 71);
 
   static const Color backgroundColor = Color(0xF5F5F5F5);
+   
+  static const Color red = Color.fromARGB(255, 201, 0, 0);
 
 
 
