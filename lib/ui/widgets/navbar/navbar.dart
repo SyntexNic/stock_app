@@ -19,40 +19,41 @@ class _NavbarState extends State<Navbar> {
   @override
   void initState() {
     super.initState();
-    fetchAccount();
+    //fetchAccount();
   }
 
-  Future<void> fetchAccount() async {
-    final url =
-        'https://stockapi-vmuc.onrender.com/account/64968cb6367264fca92b90d6';
-    final headers = {
-      'Content-Type': 'application/json',
-      'api-key': '\$yntexNicApiKey23',
-    };
-    try {
-      final response = await http.get(Uri.parse(url), headers: headers);
+  // Future<void> fetchAccount() async {
+  //   // ignore: prefer_const_declarations
+  //   final url =
+  //       'https://stockapi-vmuc.onrender.com/account/64968cb6367264fca92b90d6';
+  //   final headers = {
+  //     'Content-Type': 'application/json',
+  //     'api-key': '\$yntexNicApiKey23',
+  //   };
+  //   try {
+  //     final response = await http.get(Uri.parse(url), headers: headers);
 
-      if (response.statusCode == 200) {
-        final jsonresponse = jsonDecode(response.body);
-        final loginResponse = CreateAccountResponse.fromJson(jsonresponse);
+  //     if (response.statusCode == 200) {
+  //       final jsonresponse = jsonDecode(response.body);
+  //       final loginResponse = CreateAccountResponse.fromJson(jsonresponse);
 
-        setState(() {
-          account = loginResponse.data?.result;
-          //account = loginResponse.data?.result;
-          //AccountId = account?.accountId;
+  //       setState(() {
+  //         account = loginResponse.data?.result;
+  //         //account = loginResponse.data?.result;
+  //         //AccountId = account?.accountId;
 
-          isLoading = false;
-          print('Request gg with status: ${response.statusCode}');
+  //         isLoading = false;
+  //         print('Request gg with status: ${response.statusCode}');
 
-          print('${account}');
-        });
-      } else {
-        print('Request failed with status: ${response.statusCode}');
-      }
-    } catch (error) {
-      print('Error fetching data: $error');
-    }
-  }
+  //         print('${account}');
+  //       });
+  //     } else {
+  //       print('Request failed with status: ${response.statusCode}');
+  //     }
+  //   } catch (error) {
+  //     print('Error fetching data: $error');
+  //   }
+  // }
 
   //https://stockapi-vmuc.onrender.com/account/<cuenta_id>
   @override
@@ -130,7 +131,7 @@ class _NavbarState extends State<Navbar> {
                   'Lato',
                   color: ColorsApp.white,
                 )),
-            onTap: () => print('Upload tapped'),
+            onTap: () => Navigator.pushNamed(context, '/Login'),
           ),
         ],
       ),

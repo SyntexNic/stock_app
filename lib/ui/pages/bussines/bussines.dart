@@ -1,15 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:stock_app/constants/Theme.dart';
 import 'package:stock_app/ui/pages/home/home_page.dart';
-import 'package:stock_app/ui/pages/inventory/add_Product_page.dart';
-import 'package:stock_app/ui/pages/login/login_page.dart';
 import 'package:stock_app/ui/widgets/appBar/appbar.dart';
+import 'package:http/http.dart' as http;
 
 class Bussines extends StatefulWidget {
-    final Function(String? email, String? password)? onSubmitted;
+  final Function(String? email, String? password)? onSubmitted;
 
-  const Bussines({Key? key, this.onSubmitted}):super(key: key);
+  const Bussines({Key? key, this.onSubmitted}) : super(key: key);
 
   @override
   State<Bussines> createState() => _BussinesState();
@@ -17,7 +18,7 @@ class Bussines extends StatefulWidget {
 
 class _BussinesState extends State<Bussines> {
   late String name, measure;
-  String? emailError, passwordError;
+  String? nameError, measureError;
   Function(String? name, String? measure)? get onSubmitted =>
       widget.onSubmitted;
 
@@ -27,14 +28,14 @@ class _BussinesState extends State<Bussines> {
     name = '';
     measure = '';
 
-    emailError = null;
-    passwordError = null;
+    nameError = null;
+    measureError = null;
   }
 
   void resetErrorText() {
     setState(() {
-      emailError = null;
-      passwordError = null;
+      nameError = null;
+      measureError = null;
     });
   }
 
@@ -44,14 +45,14 @@ class _BussinesState extends State<Bussines> {
     bool isValid = true;
     if (name.isEmpty) {
       setState(() {
-        emailError = 'Correo Invalido';
+        nameError = 'nombre Invalido';
       });
       isValid = false;
     }
 
     if (measure.isEmpty) {
       setState(() {
-        passwordError = 'Por favor Ingrese una contraseña';
+        measureError = 'Por favor Ingrese una dato';
       });
       isValid = false;
     }
@@ -82,14 +83,13 @@ class _BussinesState extends State<Bussines> {
             children: [
               SizedBox(height: screenHeight * .05),
               //padding: EdgeInsets.symmetric(horizontal: 50),
-              Text('Iniciar Sesion',
+              Text('Empresa',
                   style: GoogleFonts.getFont(
                     'Lato',
-                    fontSize: 28,
+                    fontSize: 23,
                     fontWeight: FontWeight.bold,
                   )),
-              SizedBox(height: screenHeight * .01),
-              SizedBox(height: screenHeight * .07),
+              SizedBox(height: screenHeight * .04),
               InputField(
                 onChanged: (value) {
                   setState(() {
@@ -97,12 +97,20 @@ class _BussinesState extends State<Bussines> {
                   });
                 },
                 labelText: 'Nombre de la empresa',
-                errorText: emailError,
+                errorText: nameError,
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
                 autoFocus: true,
               ),
               SizedBox(height: screenHeight * .025),
+              Text('Configuracion Adicional',
+                  style: GoogleFonts.getFont(
+                    'Lato',
+                    fontSize: 23,
+                    fontWeight: FontWeight.bold,
+                  )),
+              SizedBox(height: screenHeight * .04),
+
               InputField(
                 onChanged: (value) {
                   setState(() {
@@ -110,8 +118,8 @@ class _BussinesState extends State<Bussines> {
                   });
                 },
                 onSubmitted: (val) => submit(),
-                labelText: 'Contraseña',
-                errorText: passwordError,
+                labelText: 'Tipo de moneda',
+                errorText: measureError,
                 obscureText: true,
                 textInputAction: TextInputAction.next,
               ),
@@ -119,7 +127,7 @@ class _BussinesState extends State<Bussines> {
                 height: screenHeight * .075,
               ),
               FormButton(
-                text: 'Log In',
+                text: 'Siguiente',
                 onPressed: _onButtonPressed,
                 //onpressed: submit,
                 /* Esto valida si los datos enviados son correctos, estan desactivados pa mientras */
@@ -129,26 +137,6 @@ class _BussinesState extends State<Bussines> {
               SizedBox(
                 height: screenHeight * .01,
               ),
-              TextButton(
-                onPressed: () => Navigator.pushNamed(context, '/Register'),
-                child: RichText(
-                  text: TextSpan(
-                    text: "¿No tienes cuenta?",
-                    style: GoogleFonts.getFont(
-                      'Lato',
-                      color: ColorsApp.black,
-                    ),
-                    children: [
-                      TextSpan(
-                          text: 'Crea un aquí',
-                          style: GoogleFonts.getFont(
-                            'Lato',
-                            color: ColorsApp.primary,
-                          )),
-                    ],
-                  ),
-                ),
-              )
             ],
           ),
         ),
@@ -156,10 +144,65 @@ class _BussinesState extends State<Bussines> {
     );
   }
 
+  // ignore: non_constant_identifier_names
+  Future<void> _CreateAccount() async {
+    final data =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+    var url = 'https://stockapi-vmuc.onrender.com/account';
+    final headers = {
+      'Content-Type': 'application/json',
+      'api-key': '\$yntexNicApiKey23',
+    };
+
+    String? nombre = data['nombre'];
+    String? email = data['email'];
+    String? password = data['password'];
+    print(nombre);
+    print(email);
+    print(password);
+
+    var datapost = {
+      "name": nombre,
+      "email": email,
+      "pass": password,
+      "bussinessName": name,
+      "currency": measure,
+    };
+    var jsonString = jsonEncode(datapost);
+    print(jsonString);
+
+    try {
+      var response =
+          await http.post(Uri.parse(url), body: jsonString, headers: headers);
+      if (response.statusCode == 200) {
+        //final jsonresponse = jsonDecode(response.body);
+        setState(() {
+          print('Request gg with status: ${response.statusCode}');
+        });
+      } else {
+        print('Request failed with status: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error fetching data: $error');
+    }
+  }
+
+  /*
+url: https://stockapi-vmuc.onrender.com/account
+    body: 
+    {
+        name: "",
+        email: "",
+        pass: "";
+        bussinessName: "",
+        currency: "", // moneda
+    }
+*/
   void _onButtonPressed() {
     // Validación
     if (validate()) {
       // Navegación a otra página
+      _CreateAccount();
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => HomePage()),
@@ -171,7 +214,7 @@ class _BussinesState extends State<Bussines> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Error'),
-            content: Text('Los datos no son válidos.'),
+            content: Text('xd'),
             actions: <Widget>[
               TextButton(
                 child: Text('Cerrar'),

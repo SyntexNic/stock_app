@@ -39,6 +39,9 @@ dependencies:
   intl: ^0.18.1
   image_picker: ^1.0.0
   http: ^1.1.0
+  shared_preferences: ^2.2.0
+  flutter_barcode_scanner: ^2.0.0
+
 
 
 dev_dependencies:

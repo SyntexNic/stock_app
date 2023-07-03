@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:stock_app/constants/Theme.dart';
-import 'package:stock_app/ui/pages/home/home_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Register extends StatefulWidget {
@@ -131,7 +130,7 @@ class _RegisterState extends State<Register> {
                 InputField(
                   onChanged: (value) {
                     setState(() {
-                      email = value;
+                      name = value;
                     });
                   },
                   labelText: 'Nombre',
@@ -144,7 +143,7 @@ class _RegisterState extends State<Register> {
                 InputField(
                   onChanged: (value) {
                     setState(() {
-                      name = value;
+                      email = value;
                     });
                   },
                   labelText: 'Correo',
@@ -181,11 +180,10 @@ class _RegisterState extends State<Register> {
                 SizedBox(
                   height: screenHeight * .055,
                 ),
-                FormButton(
-                  text: 'Crear Cuenta', onPressed: _onButtonPressed,
-                  /* Esto valida si los datos enviados son correctos, estan desactivados pa mientras */
-                  //onPressed: submit,
-                ),
+                FormButton(text: 'Crear Cuenta', onPressed: _onButtonPressed
+                    /* Esto valida si los datos enviados son correctos, estan desactivados pa mientras */
+                    //onPressed: submit,
+                    ),
                 TextButton(
                   onPressed: () => Navigator.pushNamed(context, '/Login'),
                   child: RichText(
@@ -219,29 +217,15 @@ class _RegisterState extends State<Register> {
     // Validación
     if (validate()) {
       // Navegación a otra página
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
+      final data = {
+        'nombre': name,
+        'email': email,
+        'password': password,
+      };
+      Navigator.pushNamed(context, '/empresa', arguments: data);
     } else {
       // Mostrar mensaje de error
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Error'),
-            content: Text('Los datos no son válidos.'),
-            actions: <Widget>[
-              TextButton(
-                child: Text('Cerrar'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
+      print("");
     }
   }
 }

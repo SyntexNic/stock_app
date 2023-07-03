@@ -1,9 +1,9 @@
 import 'dart:convert';
 
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stock_app/Response/Login/LoginResponse.dart';
 import 'package:stock_app/constants/Theme.dart';
 import 'package:stock_app/ui/pages/home/home_page.dart';
-import 'package:stock_app/ui/pages/register/register_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -26,9 +26,10 @@ class _Login extends State<Login> {
       widget.onSubmitted;
 
   bool isLoading = true;
+  bool pc = false;
   Result? account;
   //String? account;
-  String? AccountId;
+  String? AccountId = "";
 
   @override
   void initState() {
@@ -38,12 +39,21 @@ class _Login extends State<Login> {
 
     emailError = null;
     passwordError = null;
+
+    /*if (AccountId == null || AccountId == '') {
+      fetchAccount();
+    } else {
+      _LoadId();
+    }*/
+
     fetchAccount();
   }
 
   Future<void> fetchAccount() async {
+    //SharedPreferences pref = await SharedPreferences.getInstance();
+
     final url =
-        'https://stockapi-vmuc.onrender.com/account?email=$email>&pass=$password';
+        'https://stockapi-vmuc.onrender.com/account?email=$email&pass=$password';
     final headers = {
       'Content-Type': 'application/json',
       'api-key': '\$yntexNicApiKey23',
@@ -61,17 +71,20 @@ class _Login extends State<Login> {
 
           if (account!.credentialsCorrect!) {
             final String? accountId = account?.accountId;
-          } else {
-            print("strt");
-            final String? accountId = account?.accountId;
             print(accountId);
-          }
-          //AccountId = account?.accountId;
 
+            //pref.setString('ID', accountId!);
+
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+            );
+          } else {
+            print("accountId is null");
+          }
+          pc = true;
           isLoading = false;
           print('Request gg with status: ${response.statusCode}');
-
-          print('${account}');
         });
       } else {
         print('Request failed with status: ${response.statusCode}');
@@ -118,6 +131,19 @@ class _Login extends State<Login> {
         onSubmitted!(email, password);
       }
     }
+  }
+
+  _LoadId() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      AccountId = pref.getString('ID');
+      print(AccountId);
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    });
   }
 
   @override
@@ -191,6 +217,7 @@ class _Login extends State<Login> {
                 FormButton(
                   text: 'Log In',
                   onPressed: _onButtonPressed,
+
                   //onpressed: submit,
                   /* Esto valida si los datos enviados son correctos, estan desactivados pa mientras */
 
@@ -231,11 +258,12 @@ class _Login extends State<Login> {
     // Validación
     if (validate()) {
       // Navegación a otra página
-      fetchAccount();
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
+      if (isLoading) {
+        fetchAccount();
+      } else {
+        print("zzzzz");
+        print(AccountId);
+      }
     } else {
       // Mostrar mensaje de error
       showDialog(
