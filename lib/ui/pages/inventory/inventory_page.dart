@@ -21,6 +21,9 @@ class Inventory extends StatefulWidget {
 }
 
 class _InventoryState extends State<Inventory> {
+  // late final String? imagePath;
+  String searchQuery = '';
+
   bool isLoading = true;
   List<Result> products = [];
   @override
@@ -47,6 +50,7 @@ class _InventoryState extends State<Inventory> {
 
         setState(() {
           products = accountProductsResponse.data?.result ?? [];
+
           isLoading = false;
         });
       } else {
@@ -59,6 +63,12 @@ class _InventoryState extends State<Inventory> {
 
   @override
   Widget build(BuildContext context) {
+    final filteredProducts = products.where((product) {
+      final productName = product.name!.toLowerCase();
+      final query = searchQuery.toLowerCase();
+      return productName.contains(query);
+    }).toList();
+
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Inventario',
@@ -87,6 +97,11 @@ class _InventoryState extends State<Inventory> {
                       padding: const EdgeInsets.only(
                           left: 10, right: 10, top: 15, bottom: 10),
                       child: TextField(
+                        onChanged: (value) {
+                          setState(() {
+                            searchQuery = value;
+                          });
+                        },
                         decoration: InputDecoration(
                           contentPadding:
                               const EdgeInsets.symmetric(vertical: 0.05),
@@ -115,31 +130,47 @@ class _InventoryState extends State<Inventory> {
                       ),
                     ),
                     Expanded(
-                      child: ListView.builder(
+                      child: searchQuery == ''?
+                      
+                      ListView.builder(
                         itemCount: products.length,
                         itemBuilder: (BuildContext context, index) {
                           final product = products[index];
 
+                          final bytes = product.image != null
+                              ? base64Decode(product.image!)
+                              : null;
+
+                          print(product.image);
                           return Column(
                             children: [
                               Container(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 16),
                                 child: ListTile(
-                                  leading: product.imagePath == null
+                                  leading: product.image == null
                                       ? const Icon(
                                           Icons.circle_outlined,
                                           size: 35,
                                           color: ColorsApp.primary,
                                         )
-                                      : product.imagePath != HttpStatus.accepted
+                                      : product.image == ''
                                           ? const Icon(
                                               Icons.circle_outlined,
                                               size: 35,
                                               color: ColorsApp.primary,
                                             )
-                                          : Image.network(
-                                              "${product.imagePath}"),
+                                          : ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              child: Image.memory(
+                                                bytes!,
+                                                width: 40,
+                                                height: 40,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                  //Icon(Icons.circle),
                                   title: Text(
                                     "${product.name}",
                                     style: GoogleFonts.getFont(
@@ -171,7 +202,6 @@ class _InventoryState extends State<Inventory> {
                                       'price': product.price,
                                       'code': product.code,
                                       'desc': product.description,
-                                      
 
                                       // otros datos...
                                     };
@@ -192,8 +222,100 @@ class _InventoryState extends State<Inventory> {
                             ],
                           );
                         },
+                      )
+                      :ListView.builder(
+                        itemCount: filteredProducts.length,
+                        itemBuilder: (BuildContext context, index) {
+                          final product = filteredProducts[index];
+                          // Resto del código del itemBuilder
+                          final bytes = product.image != null
+                              ? base64Decode(product.image!)
+                              : null;
+
+                          print(product.image);
+                          return Column(
+                            children: [
+                              Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
+                                child: ListTile(
+                                  leading: product.image == null
+                                      ? const Icon(
+                                          Icons.circle_outlined,
+                                          size: 35,
+                                          color: ColorsApp.primary,
+                                        )
+                                      : product.image == ''
+                                          ? const Icon(
+                                              Icons.circle_outlined,
+                                              size: 35,
+                                              color: ColorsApp.primary,
+                                            )
+                                          : ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              child: Image.memory(
+                                                bytes!,
+                                                width: 40,
+                                                height: 40,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                  //Icon(Icons.circle),
+                                  title: Text(
+                                    "${product.name}",
+                                    style: GoogleFonts.getFont(
+                                      'Lato',
+                                      color: ColorsApp.primary,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    "stock: ${product.stock}",
+                                    style: GoogleFonts.getFont(
+                                      'Lato',
+                                      color: ColorsApp.primary,
+                                    ),
+                                  ),
+                                  trailing: Text(
+                                    "${product.measure}${product.price}",
+                                    style: GoogleFonts.getFont(
+                                      'Lato',
+                                      color: ColorsApp.primary,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  dense: true,
+                                  onTap: () {
+                                    final data = {
+                                      'nombre': product.name,
+                                      'stock': product.stock,
+                                      'price': product.price,
+                                      'code': product.code,
+                                      'desc': product.description,
+
+                                      // otros datos...
+                                    };
+                                    Navigator.pushNamed(
+                                        context, '/DetailsProduct',
+                                        arguments: data);
+                                  },
+                                ),
+                              ),
+                              Container(
+                                padding:
+                                    const EdgeInsets.only(left: 80, right: 35),
+                                child: const Divider(
+                                  height: 1.5,
+                                  color: ColorsApp.primary,
+                                ),
+                              )
+                            ],
+                          );;
+                        },
                       ),
                     ),
+                    
                   ],
                 ),
       floatingActionButton: _buttons(),

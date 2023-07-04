@@ -47,7 +47,7 @@ class Result {
   int? stock;
   int? price;
   String? measure;
-  String? imagePath;
+  String? image;
   int? iV;
 
   Result(
@@ -59,7 +59,7 @@ class Result {
       this.stock,
       this.price,
       this.measure,
-      this.imagePath, // url de la imgen del producto
+      this.image, // url de la imgen del producto
       this.iV});
 
   Result.fromJson(Map<String, dynamic> json) {
@@ -71,7 +71,7 @@ class Result {
     stock = json['stock'];
     price = json['price'];
     measure = json['measure'];
-    imagePath = json['imagePath'];
+    image = json['image'];
     iV = json['__v'];
   }
 
@@ -85,7 +85,7 @@ class Result {
     data['stock'] = this.stock;
     data['price'] = this.price;
     data['measure'] = this.measure;
-    data['imagePath'] = this.imagePath;
+    data['image'] = this.image;
     data['__v'] = this.iV;
     return data;
   }

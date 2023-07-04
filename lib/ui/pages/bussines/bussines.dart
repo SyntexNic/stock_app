@@ -187,17 +187,6 @@ class _BussinesState extends State<Bussines> {
     }
   }
 
-  /*
-url: https://stockapi-vmuc.onrender.com/account
-    body: 
-    {
-        name: "",
-        email: "",
-        pass: "";
-        bussinessName: "",
-        currency: "", // moneda
-    }
-*/
   void _onButtonPressed() {
     // Validación
     if (validate()) {

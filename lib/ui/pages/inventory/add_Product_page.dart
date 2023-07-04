@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -6,11 +7,21 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:stock_app/constants/Theme.dart';
 import 'package:stock_app/ui/pages/bussines/bussines.dart';
+import 'package:stock_app/ui/pages/inventory/inventory_page.dart';
 import 'package:stock_app/ui/widgets/appBar/appbar.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
 
 class AddProduct extends StatefulWidget {
-  final Function(String? email, String? password, String? name)? onSubmitted;
+  final Function(
+    String? accountId,
+    String? code,
+    String? name,
+    String? description,
+    String? stock,
+    String? price,
+    String? measure,
+  )? onSubmitted;
 
   const AddProduct({this.onSubmitted, Key? key}) : super(key: key);
 
@@ -19,26 +30,95 @@ class AddProduct extends StatefulWidget {
 }
 
 class _AddProductState extends State<AddProduct> {
-  late String email, password, confirmPassword, name;
-  String? emailError, passwordError, nameError;
+  String? base64String;
+
+  Future<void> _CreateProduct() async {
+    var url = 'https://stockapi-vmuc.onrender.com/product';
+    final headers = {
+      'Content-Type': 'application/json',
+      'api-key': '\$yntexNicApiKey23',
+    };
+    int stock1 = int.parse(stock);
+    double price1 = double.parse(price);
+    var datapost = {
+      "accountId": accountId,
+      "name": name,
+      "code": code,
+      "description": description,
+      "stock": stock1,
+      "price": price1,
+      "measure": measure,
+      "image": base64String
+    };
+
+    var jsonString = jsonEncode(datapost);
+    print(jsonString);
+    print(code);
+    print(name);
+    print(description);
+    print(stock);
+    print(base64String);
+    print(price);
+    print(measure);
+    print(accountId);
+
+    try {
+      var response =
+          await http.post(Uri.parse(url), body: jsonString, headers: headers);
+      if (response.statusCode == 200) {
+        //final jsonresponse = jsonDecode(response.body);
+        setState(() {
+          print('Request gg with status: ${response.statusCode}');
+        });
+      } else {
+        print('Request failed with status: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error fetching data: $error');
+    }
+  }
+
+  late String accountId, code, description, name, measure, stock, price;
+  String? accountIdError,
+      codeError,
+      descriptionError,
+      nameError,
+      measureError,
+      stockError,
+      priceError;
 
   String? result;
-  Function(String? email, String? password, String? name)? get onSubmitted =>
-      widget.onSubmitted;
-  File? img = null;
+  Function(
+    String? accountId,
+    String? code,
+    String? name,
+    String? description,
+    String? stock,
+    String? price,
+    String? measure,
+  )? get onSubmitted => widget.onSubmitted;
+
+  File? img;
   final picker = ImagePicker();
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    email = '';
-    password = '';
-    confirmPassword = '';
+    accountId = '649f6525660a43f2fc857eb3';
+    code = '';
+    description = '';
     name = '';
+    measure = '';
+    stock = "";
+    price = "";
+    img = null;
 
-    emailError = null;
-    passwordError = null;
+    accountIdError = null;
+    codeError = null;
+    descriptionError = null;
     nameError = null;
+    measureError = null;
   }
 
   Future<void> SelImg(op) async {
@@ -56,6 +136,9 @@ class _AddProductState extends State<AddProduct> {
       } else {
         print("");
       }
+      List<int> imageBytes = File(pickedFile!.path).readAsBytesSync();
+      base64String = base64Encode(imageBytes);
+      print(base64String);
       Navigator.of(context).pop();
     });
   }
@@ -92,12 +175,16 @@ class _AddProductState extends State<AddProduct> {
                                   color: ColorsApp.primary),
                               iconSize: 50,
                             )
-                          : Image.file(
-                              img!,
-                              height: 150,
-                              width: 160,
-                              fit: BoxFit.cover,
-                            ),
+                          : IconButton(
+                              onPressed: () {
+                                showImagePickerModal(context);
+                              },
+                              icon: Image.file(
+                                img!,
+                                height: 150,
+                                width: 160,
+                                fit: BoxFit.cover,
+                              )),
                     ),
                   ),
                 ),
@@ -108,16 +195,22 @@ class _AddProductState extends State<AddProduct> {
                     child: Column(
                       children: [
                         InputField1(
-                          labelText: 'Codigo',
-                          initialText: 'Ejemplo',
-                          onChanged: (value) {
-                            result == null ? '' : '$result';
-                          },
-                        ),
+                            labelText: 'Codigo',
+                            initialText: '',
+                            onChanged: (value) {
+                              setState(() {
+                                code = value;
+                                print(code);
+                              });
+                            }),
                         SizedBox(height: screenHeight * 0.03),
                         InputField(
-                          labelText: 'cantidad',
-                        ),
+                            labelText: 'cantidad',
+                            onChanged: (value) {
+                              setState(() {
+                                stock = value;
+                              });
+                            }),
                       ],
                     ),
                   ),
@@ -131,26 +224,40 @@ class _AddProductState extends State<AddProduct> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       InputField(
-                        labelText: 'Nombre',
-                      ),
+                          labelText: 'Nombre',
+                          onChanged: (value) {
+                            setState(() {
+                              name = value;
+                            });
+                          }),
                       SizedBox(height: screenHeight * 0.03),
                       InputField(
-                        labelText: 'Descripcion',
-                      ),
+                          labelText: 'Descripcion',
+                          onChanged: (value) {
+                            setState(() {
+                              description = value;
+                            });
+                          }),
                       SizedBox(height: screenHeight * 0.03),
                       InputField(
-                        labelText: 'precio',
-                      ),
+                          labelText: 'precio',
+                          onChanged: (value) {
+                            setState(() {
+                              price = value;
+                            });
+                          }),
                       SizedBox(height: screenHeight * 0.03),
                       InputField(
-                        labelText: 'Unidad de medida',
-                      ),
+                          labelText: 'Unidad de medida',
+                          onChanged: (value) {
+                            setState(() {
+                              measure = value;
+                            });
+                          }),
                       SizedBox(height: screenHeight * 0.03),
                       FormButton(
                         text: 'Guardar',
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/Inventory');
-                        },
+                        onPressed: _onButtonPressed,
                       ),
                     ],
                   )),
@@ -161,72 +268,78 @@ class _AddProductState extends State<AddProduct> {
 
   void resetErrorText() {
     setState(() {
-      emailError = null;
-      passwordError = null;
+      codeError = null;
+      descriptionError = null;
       nameError = null;
+      measureError = null;
     });
   }
 
   void submit() {
     if (validate()) {
       if (onSubmitted != null) {
-        onSubmitted!(email, password, name);
+        onSubmitted!(accountId, code, name, description, price, stock, measure);
       }
     }
-  }
-
-  bool validate() {
-    resetErrorText();
-
-    RegExp emailExp = RegExp(
-        r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
-
-    bool isValid = true;
-    // hay que corregir esa vaina comentada xd
-    if (email.isEmpty /*|| !emailExp.hasMatch(email)*/) {
-      setState(() {
-        emailError = 'Correo Invalido';
-      });
-      isValid = false;
-    }
-
-    if (name.isEmpty) {
-      setState(() {
-        emailError = 'Ingrese un Nombre';
-      });
-      isValid = false;
-    }
-
-    if (password.isEmpty || confirmPassword.isEmpty) {
-      setState(() {
-        passwordError = 'Por favor,Ingrese una contraseña';
-      });
-      isValid = false;
-    }
-    if (password != confirmPassword) {
-      setState(() {
-        passwordError = 'Contraseñas no coinciden';
-      });
-      isValid = false;
-    }
-
-    return isValid;
   }
 
   void _onButtonPressed() {
     // Validación
     if (validate()) {
       // Navegación a otra página
-      final data = {
-        'nombre': name,
-        'email': email,
-        'password': password,
-      };
-      Navigator.pushNamed(context, '/empresa', arguments: data);
+      if (isLoading) {
+        _CreateProduct();
+        print(code);
+        print(name);
+        print(description);
+        print(stock);
+        print(base64String);
+        print(price);
+        print(measure);
+        print(accountId);
+
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => Inventory(
+                      accountId: accountId,
+                    )));
+      } else {
+        print("zzzzz");
+      }
     } else {
       // Mostrar mensaje de error
-      print("");
+      print("?");
     }
+  }
+
+  bool validate() {
+    resetErrorText();
+
+    bool isValid = true;
+
+    if (name.isEmpty) {
+      setState(() {
+        nameError = 'Nombre Invalido';
+      });
+      isValid = false;
+    }
+
+    if (price == '') {
+      setState(() {
+        priceError = 'Ingrese un positivo';
+      });
+      isValid = false;
+    }
+
+    if (stock == '') {
+      setState(() {
+        stockError = 'Por favor,Ingrese un positivo';
+      });
+      isValid = false;
+    }
+
+    return isValid;
   }
 
   void showImagePickerModal(BuildContext context) {
@@ -325,72 +438,89 @@ class FormButton extends StatelessWidget {
   }
 }
 
-class InputField1 extends StatelessWidget {
+class InputField1 extends StatefulWidget {
   final String? labelText;
   final Function(String)? onChanged;
-  final String? initialText; // Nueva propiedad para el texto inicial
-
+  final String? initialText;
   final Function(String)? onSubmitted;
   final String? errorText;
   final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
   final bool autoFocus;
   final bool obscureText;
-  const InputField1(
-      {this.labelText,
-      this.onChanged,
-      this.onSubmitted,
-      this.errorText,
-      this.keyboardType,
-      this.textInputAction,
-      this.autoFocus = false,
-      this.obscureText = false,
-      this.initialText,
-      Key? key})
-      : super(key: key);
+
+  const InputField1({
+    this.labelText,
+    this.onChanged,
+    this.onSubmitted,
+    this.errorText,
+    this.keyboardType,
+    this.textInputAction,
+    this.autoFocus = false,
+    this.obscureText = false,
+    this.initialText,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  _InputField1State createState() => _InputField1State();
+}
+
+class _InputField1State extends State<InputField1> {
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.initialText ?? '');
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController _controller = TextEditingController(text: '');
-
     return TextField(
-      autofocus: autoFocus,
-      onChanged: onChanged,
-      onSubmitted: onSubmitted,
-      keyboardType: keyboardType,
-      textInputAction: textInputAction,
-      obscureText: obscureText,
-      controller:
-          _controller, // Establecemos el controlador con el texto inicial
-
+      autofocus: widget.autoFocus,
+      onChanged: widget.onChanged,
+      onSubmitted: widget.onSubmitted,
+      keyboardType: widget.keyboardType,
+      textInputAction: widget.textInputAction,
+      obscureText: widget.obscureText,
+      enabled: true,
+      controller: _controller,
       decoration: InputDecoration(
-          hoverColor: ColorsApp.primary,
-          fillColor: ColorsApp.primary,
-          focusColor: ColorsApp.primary,
-          labelText: labelText,
-          errorText: errorText,
-          suffixIcon: IconButton(
-              onPressed: () async {
-                String barcode = await FlutterBarcodeScanner.scanBarcode(
-                  '#ff6666', // Color personalizado para el escáner
-                  'Cancelar', // Texto del botón de cancelar
-                  true, // Mostrar flash
-                  ScanMode.BARCODE, // Modo de escaneo
-                );
-                _controller.text = barcode;
-
-                print(
-                    'Código de barras escaneado: $barcode-----------------------------------------------------------------------------------------------------');
-              },
-              icon: Icon(
-                Icons.camera_alt,
-                color: ColorsApp.primary,
-              )),
-          floatingLabelBehavior: FloatingLabelBehavior.always,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
+        hoverColor: ColorsApp.primary,
+        fillColor: ColorsApp.primary,
+        focusColor: ColorsApp.primary,
+        labelText: widget.labelText,
+        errorText: widget.errorText,
+        suffixIcon: IconButton(
+          onPressed: () async {
+            String barcode = await FlutterBarcodeScanner.scanBarcode(
+              '#ff6666',
+              'Cancelar',
+              true,
+              ScanMode.BARCODE,
+            );
+            setState(() {
+              _controller.text = barcode;
+            });
+          },
+          icon: Icon(
+            Icons.camera_alt,
+            color: ColorsApp.primary,
           ),
-          iconColor: ColorsApp.primary),
+        ),
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        iconColor: ColorsApp.primary,
+      ),
     );
   }
 }
