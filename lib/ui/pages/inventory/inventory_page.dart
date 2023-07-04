@@ -130,192 +130,199 @@ class _InventoryState extends State<Inventory> {
                       ),
                     ),
                     Expanded(
-                      child: searchQuery == ''?
-                      
-                      ListView.builder(
-                        itemCount: products.length,
-                        itemBuilder: (BuildContext context, index) {
-                          final product = products[index];
+                      child: searchQuery == ''
+                          ? ListView.builder(
+                              itemCount: products.length,
+                              itemBuilder: (BuildContext context, index) {
+                                final product = products[index];
 
-                          final bytes = product.image != null
-                              ? base64Decode(product.image!)
-                              : null;
+                                final bytes = product.image != null
+                                    ? base64Decode(product.image!)
+                                    : null;
 
-                          print(product.image);
-                          return Column(
-                            children: [
-                              Container(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 16),
-                                child: ListTile(
-                                  leading: product.image == null
-                                      ? const Icon(
-                                          Icons.circle_outlined,
-                                          size: 35,
-                                          color: ColorsApp.primary,
-                                        )
-                                      : product.image == ''
-                                          ? const Icon(
-                                              Icons.circle_outlined,
-                                              size: 35,
-                                              color: ColorsApp.primary,
-                                            )
-                                          : ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                              child: Image.memory(
-                                                bytes!,
-                                                width: 40,
-                                                height: 40,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                  //Icon(Icons.circle),
-                                  title: Text(
-                                    "${product.name}",
-                                    style: GoogleFonts.getFont(
-                                      'Lato',
-                                      color: ColorsApp.primary,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  subtitle: Text(
-                                    "stock: ${product.stock}",
-                                    style: GoogleFonts.getFont(
-                                      'Lato',
-                                      color: ColorsApp.primary,
-                                    ),
-                                  ),
-                                  trailing: Text(
-                                    "${product.measure}${product.price}",
-                                    style: GoogleFonts.getFont(
-                                      'Lato',
-                                      color: ColorsApp.primary,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  dense: true,
-                                  onTap: () {
-                                    final data = {
-                                      'nombre': product.name,
-                                      'stock': product.stock,
-                                      'price': product.price,
-                                      'code': product.code,
-                                      'desc': product.description,
+                                print(product.image);
+                                return Column(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16),
+                                      child: ListTile(
+                                        leading: product.image == null
+                                            ? const Icon(
+                                                Icons.circle_outlined,
+                                                size: 35,
+                                                color: ColorsApp.primary,
+                                              )
+                                            : product.image == ''
+                                                ? const Icon(
+                                                    Icons.circle_outlined,
+                                                    size: 35,
+                                                    color: ColorsApp.primary,
+                                                  )
+                                                : ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                    child: Image.memory(
+                                                      bytes!,
+                                                      width: 40,
+                                                      height: 40,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                        //Icon(Icons.circle),
+                                        title: Text(
+                                          "${product.name}",
+                                          style: GoogleFonts.getFont(
+                                            'Lato',
+                                            color: ColorsApp.primary,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        subtitle: Text(
+                                          "stock: ${product.stock}",
+                                          style: GoogleFonts.getFont(
+                                            'Lato',
+                                            color: ColorsApp.primary,
+                                          ),
+                                        ),
+                                        trailing: Text(
+                                          "${product.measure}${product.price}",
+                                          style: GoogleFonts.getFont(
+                                            'Lato',
+                                            color: ColorsApp.primary,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        dense: true,
+                                        onTap: () {
+                                          final data = {
+                                            'nombre': product.name,
+                                            'stock': product.stock,
+                                            'price': product.price,
+                                            'code': product.code,
+                                            'desc': product.description,
+                                            'img': bytes,
+                                            'id': product.id,
+                                            'AccountId': product.accountId
 
-                                      // otros datos...
-                                    };
-                                    Navigator.pushNamed(
-                                        context, '/DetailsProduct',
-                                        arguments: data);
-                                  },
-                                ),
-                              ),
-                              Container(
-                                padding:
-                                    const EdgeInsets.only(left: 80, right: 35),
-                                child: const Divider(
-                                  height: 1.5,
-                                  color: ColorsApp.primary,
-                                ),
-                              )
-                            ],
-                          );
-                        },
-                      )
-                      :ListView.builder(
-                        itemCount: filteredProducts.length,
-                        itemBuilder: (BuildContext context, index) {
-                          final product = filteredProducts[index];
-                          // Resto del código del itemBuilder
-                          final bytes = product.image != null
-                              ? base64Decode(product.image!)
-                              : null;
+                                            // otros datos...
+                                          };
+                                          Navigator.pushNamed(
+                                              context, '/DetailsProduct',
+                                              arguments: data);
+                                        },
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.only(
+                                          left: 80, right: 35),
+                                      child: const Divider(
+                                        height: 1.5,
+                                        color: ColorsApp.primary,
+                                      ),
+                                    )
+                                  ],
+                                );
+                              },
+                            )
+                          : ListView.builder(
+                              itemCount: filteredProducts.length,
+                              itemBuilder: (BuildContext context, index) {
+                                final product = filteredProducts[index];
+                                // Resto del código del itemBuilder
+                                final bytes = product.image != null
+                                    ? base64Decode(product.image!)
+                                    : null;
 
-                          print(product.image);
-                          return Column(
-                            children: [
-                              Container(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 16),
-                                child: ListTile(
-                                  leading: product.image == null
-                                      ? const Icon(
-                                          Icons.circle_outlined,
-                                          size: 35,
-                                          color: ColorsApp.primary,
-                                        )
-                                      : product.image == ''
-                                          ? const Icon(
-                                              Icons.circle_outlined,
-                                              size: 35,
-                                              color: ColorsApp.primary,
-                                            )
-                                          : ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                              child: Image.memory(
-                                                bytes!,
-                                                width: 40,
-                                                height: 40,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                  //Icon(Icons.circle),
-                                  title: Text(
-                                    "${product.name}",
-                                    style: GoogleFonts.getFont(
-                                      'Lato',
-                                      color: ColorsApp.primary,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  subtitle: Text(
-                                    "stock: ${product.stock}",
-                                    style: GoogleFonts.getFont(
-                                      'Lato',
-                                      color: ColorsApp.primary,
-                                    ),
-                                  ),
-                                  trailing: Text(
-                                    "${product.measure}${product.price}",
-                                    style: GoogleFonts.getFont(
-                                      'Lato',
-                                      color: ColorsApp.primary,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  dense: true,
-                                  onTap: () {
-                                    final data = {
-                                      'nombre': product.name,
-                                      'stock': product.stock,
-                                      'price': product.price,
-                                      'code': product.code,
-                                      'desc': product.description,
+                                print(product.image);
+                                return Column(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16),
+                                      child: ListTile(
+                                        leading: product.image == null
+                                            ? const Icon(
+                                                Icons.circle_outlined,
+                                                size: 35,
+                                                color: ColorsApp.primary,
+                                              )
+                                            : product.image == ''
+                                                ? const Icon(
+                                                    Icons.circle_outlined,
+                                                    size: 35,
+                                                    color: ColorsApp.primary,
+                                                  )
+                                                : ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                    child: Image.memory(
+                                                      bytes!,
+                                                      width: 40,
+                                                      height: 40,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                        //Icon(Icons.circle),
+                                        title: Text(
+                                          "${product.name}",
+                                          style: GoogleFonts.getFont(
+                                            'Lato',
+                                            color: ColorsApp.primary,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        subtitle: Text(
+                                          "stock: ${product.stock}",
+                                          style: GoogleFonts.getFont(
+                                            'Lato',
+                                            color: ColorsApp.primary,
+                                          ),
+                                        ),
+                                        trailing: Text(
+                                          "${product.measure}${product.price}",
+                                          style: GoogleFonts.getFont(
+                                            'Lato',
+                                            color: ColorsApp.primary,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        dense: true,
+                                        onTap: () {
+                                          final data = {
+                                            'nombre': product.name,
+                                            'stock': product.stock,
+                                            'price': product.price,
+                                            'code': product.code,
+                                            'desc': product.description,
+                                            'img': bytes,
+                                            'id': product.id,
+                                            'AccountId': product.accountId
 
-                                      // otros datos...
-                                    };
-                                    Navigator.pushNamed(
-                                        context, '/DetailsProduct',
-                                        arguments: data);
-                                  },
-                                ),
-                              ),
-                              Container(
-                                padding:
-                                    const EdgeInsets.only(left: 80, right: 35),
-                                child: const Divider(
-                                  height: 1.5,
-                                  color: ColorsApp.primary,
-                                ),
-                              )
-                            ],
-                          );;
-                        },
-                      ),
+                                            // otros datos...
+                                          };
+                                          Navigator.pushNamed(
+                                              context, '/DetailsProduct',
+                                              arguments: data);
+                                        },
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.only(
+                                          left: 80, right: 35),
+                                      child: const Divider(
+                                        height: 1.5,
+                                        color: ColorsApp.primary,
+                                      ),
+                                    )
+                                  ],
+                                );
+                                ;
+                              },
+                            ),
                     ),
-                    
                   ],
                 ),
       floatingActionButton: _buttons(),
