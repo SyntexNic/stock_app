@@ -194,13 +194,33 @@ class _BillsState extends State<Bills> {
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: ColorsApp.primary,
-          onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=>  AddBills(no: (highestNumber+1).toString(),))),
+          onPressed: (){
+            
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>  AddBills(no: (highestNumber+1).toString(),id: widget.accountId,)));
+            setState(() {
+              _actualizarFacturas();
+            });
+          },
+
          child: const Icon(Icons.add,size: 40,),
         ),
         backgroundColor: ColorsApp.backgroundColor,
     );
     
   }
+  Future<void> _actualizarFacturas() async {
+  setState(() {
+    isLoading = true;
+  });
+
+  await fetchInvoices();
+
+  setState(() {
+    isLoading = false;
+  });
+}
+
+
 
   int findHighestNumber(List<int> numbers) {
   int? highestNumber;

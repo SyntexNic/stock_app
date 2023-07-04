@@ -1,0 +1,88 @@
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding:
+              const EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 10),
+          child: TextField(
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.symmetric(vertical: 0.05),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(30),
+                borderSide: const BorderSide(color: ColorsApp.primary),
+              ),
+              focusedBorder: const OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: ColorsApp.primary,
+                ),
+              ),
+              prefixIcon: IconButton(
+                icon: const Icon(Icons.search, color: ColorsApp.primary),
+                onPressed: () {},
+              ),
+              suffixIcon: IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.clear, color: ColorsApp.primary),
+              ),
+              hintText: 'Buscar',
+            ),
+          ),
+        ),
+        Expanded(
+          child: ListView.builder(
+            itemCount: products.length,
+            itemBuilder: (context, index) {
+              return Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: ListTile(
+                      leading: const Icon(
+                        Icons.circle_outlined,
+                        size: 35,
+                        color: ColorsApp.primary,
+                      ),
+                      title: Text(
+                        products[index].name,
+                        style: GoogleFonts.getFont(
+                          'Lato',
+                          color: ColorsApp.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        "stock:${products[index].stock}",
+                        style: GoogleFonts.getFont(
+                          'Lato',
+                          color: ColorsApp.primary,
+                        ),
+                      ),
+                      trailing: Text(
+                        "C\$ ${products[index].price}",
+                        style: GoogleFonts.getFont(
+                          'Lato',
+                          color: ColorsApp.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      dense: true,
+                      onTap: () =>
+                          Navigator.pushNamed(context, '/DetailsProduct'),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(left: 80, right: 35),
+                    child: const Divider(
+                      height: 1.5,
+                      color: ColorsApp.primary,
+                    ),
+                  )
+                ],
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
