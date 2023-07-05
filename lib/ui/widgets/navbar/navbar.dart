@@ -7,9 +7,12 @@ import 'package:stock_app/constants/Theme.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:stock_app/ui/pages/bills/bills_page.dart';
+import 'package:stock_app/ui/pages/bills/products/products_list.dart';
+import 'package:stock_app/ui/pages/inventory/add_Product_page.dart';
 
 class Navbar extends StatefulWidget {
-  Navbar({Key? key}) : super(key: key);
+  final String userId;
+  Navbar({Key? key, required this.userId}) : super(key: key);
 
   @override
   State<Navbar> createState() => _NavbarState();
@@ -74,7 +77,7 @@ class _NavbarState extends State<Navbar> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => Bills(
-                            accountId: "649f6525660a43f2fc857eb3",
+                            accountId: "${widget.userId}",
                           )));
             },
           ),
@@ -91,7 +94,35 @@ class _NavbarState extends State<Navbar> {
                 color: ColorsApp.white,
               ),
             ),
-            onTap: () => Navigator.pushNamed(context, '/Inventory'),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Inventory(
+                            accountId: "${widget.userId}",
+                          )));
+            },
+          ),
+          Divider(),
+          ListTile(
+            leading: Icon(
+              Icons.add,
+              color: ColorsApp.white,
+            ),
+            title: Text(
+              'Agregar',
+              style: GoogleFonts.getFont(
+                'Lato',
+                color: ColorsApp.white,
+              ),
+            ),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddProduct(),
+                  ));
+            },
           ),
           SizedBox(
             height: screenHeight * .49,

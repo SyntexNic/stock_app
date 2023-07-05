@@ -2,8 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:stock_app/Response/Login/LoginResponse.dart';
 import 'package:stock_app/constants/Theme.dart';
+import 'package:stock_app/main.dart';
 import 'package:stock_app/ui/pages/home/home_page.dart';
+import 'package:stock_app/ui/pages/login/login_page.dart';
 import 'package:stock_app/ui/widgets/appBar/appbar.dart';
 import 'package:http/http.dart' as http;
 
@@ -19,6 +22,8 @@ class Bussines extends StatefulWidget {
 class _BussinesState extends State<Bussines> {
   late String name, measure;
   String? nameError, measureError;
+  String? userId = "";
+
   Function(String? name, String? measure)? get onSubmitted =>
       widget.onSubmitted;
 
@@ -174,10 +179,27 @@ class _BussinesState extends State<Bussines> {
     try {
       var response =
           await http.post(Uri.parse(url), body: jsonString, headers: headers);
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         //final jsonresponse = jsonDecode(response.body);
-        setState(() {
+        final jsonresponse = jsonDecode(response.body);
+        final loginResponse = LoginResponse.fromJson(jsonresponse);
+
+        setState(() async {
           print('Request gg with status: ${response.statusCode}');
+          var account = loginResponse.data?.result;
+          final String? accountId = account?.accountId;
+          print(accountId);
+          print("--------------------------------------\n\n\n");
+
+          String? userId = accountId;
+          await saveUserId(userId!);
+          print(userId);
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => Login()),
+          );
+          print('${response}\n\n\n\n\n\n\n\n\n\n');
         });
       } else {
         print('Request failed with status: ${response.statusCode}');
@@ -192,10 +214,13 @@ class _BussinesState extends State<Bussines> {
     if (validate()) {
       // Navegación a otra página
       _CreateAccount();
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage(userId: '1',)),
-      );
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //       builder: (context) => HomePage(
+      //             userId: '1',
+      //           )),
+      // );
     } else {
       // Mostrar mensaje de error
       showDialog(

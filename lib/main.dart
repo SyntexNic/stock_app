@@ -30,10 +30,8 @@ class MyApp extends StatelessWidget {
         '/': (context) => userId != null ? HomePage(userId: userId!) : Login(),
         '/Login': (context) => const Login(),
         '/Register': (context) => const Register(),
-        '/Inventory': (context) => const Inventory(
-              accountId: '649f6525660a43f2fc857eb3',
-            ),
-        '/AddProduct': (context) => const AddProduct(),
+        '/Inventory': (context) => Inventory(accountId: userId!),
+        '/AddProduct': (context) => AddProduct(accountId: userId!),
         '/DetailsProduct': (context) => const PDetails(),
         '/EditProduct': (context) => const EditProduct(),
         '/empresa': (context) => const Bussines(),

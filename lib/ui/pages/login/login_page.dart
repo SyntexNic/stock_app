@@ -261,23 +261,7 @@ class _Login extends State<Login> {
       }
     } else {
       // Mostrar mensaje de error
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Error'),
-            content: Text('Los datos no son válidos.'),
-            actions: <Widget>[
-              TextButton(
-                child: Text('Cerrar'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
+      print("");
     }
   }
 }

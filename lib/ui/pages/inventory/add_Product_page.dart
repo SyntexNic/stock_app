@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:stock_app/constants/Theme.dart';
 import 'package:stock_app/ui/pages/bussines/bussines.dart';
 import 'package:stock_app/ui/pages/inventory/inventory_page.dart';
@@ -13,6 +12,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 
 class AddProduct extends StatefulWidget {
+  final String? accountId;
   final Function(
     String? accountId,
     String? code,
@@ -23,7 +23,8 @@ class AddProduct extends StatefulWidget {
     String? measure,
   )? onSubmitted;
 
-  const AddProduct({this.onSubmitted, Key? key}) : super(key: key);
+  const AddProduct({this.onSubmitted, Key? key, this.accountId})
+      : super(key: key);
 
   @override
   State<AddProduct> createState() => _AddProductState();
@@ -65,7 +66,7 @@ class _AddProductState extends State<AddProduct> {
     try {
       var response =
           await http.post(Uri.parse(url), body: jsonString, headers: headers);
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         //final jsonresponse = jsonDecode(response.body);
         setState(() {
           print('Request gg with status: ${response.statusCode}');
@@ -78,13 +79,14 @@ class _AddProductState extends State<AddProduct> {
     }
   }
 
-  late String accountId, code, description, name, measure, stock, price;
+  late String code, description, name, measure, stock, price;
   String? accountIdError,
       codeError,
       descriptionError,
       nameError,
       measureError,
       stockError,
+      accountId,
       priceError;
 
   String? result;
@@ -105,7 +107,7 @@ class _AddProductState extends State<AddProduct> {
   @override
   void initState() {
     super.initState();
-    accountId = '649f6525660a43f2fc857eb3';
+    accountId = widget.accountId;
     code = '';
     description = '';
     name = '';
@@ -302,7 +304,7 @@ class _AddProductState extends State<AddProduct> {
             context,
             MaterialPageRoute(
                 builder: (context) => Inventory(
-                      accountId: accountId,
+                      accountId: widget.accountId!,
                     )));
       } else {
         print("zzzzz");

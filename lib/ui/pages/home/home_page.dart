@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stock_app/ui/pages/bills/bills_page.dart';
+import 'package:stock_app/ui/pages/inventory/inventory_page.dart';
 import 'package:stock_app/ui/widgets/navbar/navbar.dart';
 import 'package:stock_app/constants/Theme.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,7 +20,7 @@ class _HomePageState extends State<HomePage> {
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      drawer: Navbar(),
+      drawer: Navbar(userId: '${widget.userId}'),
       appBar: AppBar(
         title: Container(
           margin: EdgeInsets.only(left: 80),
@@ -43,10 +44,10 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    '${widget.userId}',
+                    'Bienvenido',
                     style: GoogleFonts.getFont(
                       'Lato',
-                      fontSize: 24,
+                      fontSize: 30,
                       color: ColorsApp.white,
                     ),
                   )
@@ -64,29 +65,46 @@ class _HomePageState extends State<HomePage> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => Bills(
-                                accountId: "649f6525660a43f2fc857eb3",
+                                accountId: "${widget.userId}",
                               )));
                 },
                 icon: const Icon(
                   Icons.receipt_long_outlined,
                   color: ColorsApp.primary,
                 ),
-              )
+              ),
+              Text("Factura",
+                  style: GoogleFonts.getFont('Lato',
+                      fontSize: 24,
+                      color: ColorsApp.primary,
+                      fontWeight: FontWeight.bold)),
             ]),
           ),
           SizedBox(
-            height: screenHeight * .18,
+            height: screenHeight * .08,
           ),
           Container(
             child: Column(children: [
               IconButton(
                 iconSize: 100,
-                onPressed: () => Navigator.pushNamed(context, '/Inventory'),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Inventory(
+                                accountId: "${widget.userId}",
+                              )));
+                },
                 icon: const Icon(
                   Icons.warehouse,
                   color: ColorsApp.primary,
                 ),
-              )
+              ),
+              Text("Inventario",
+                  style: GoogleFonts.getFont('Lato',
+                      fontSize: 24,
+                      color: ColorsApp.primary,
+                      fontWeight: FontWeight.bold)),
             ]),
           ),
         ],

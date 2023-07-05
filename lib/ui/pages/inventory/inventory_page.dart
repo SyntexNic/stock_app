@@ -1,13 +1,10 @@
 import 'dart:convert';
-import 'dart:ffi';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:stock_app/Response/Products/AccountProductsResponse.dart';
 import 'package:stock_app/constants/Theme.dart';
-import 'package:stock_app/models/products.dart';
-import 'package:stock_app/ui/widgets/Products/Product_list.dart';
+import 'package:stock_app/ui/pages/inventory/add_Product_page.dart';
 import 'package:stock_app/ui/widgets/appBar/appbar.dart';
 import 'package:http/http.dart' as http;
 
@@ -81,15 +78,19 @@ class _InventoryState extends State<Inventory> {
               ),
             )
           : products.isEmpty
-              ? Center(
-                  child: Text(
-                    "No hay productos disponibles",
-                    style: GoogleFonts.getFont(
-                      'Lato',
-                      fontSize: 24,
-                      color: ColorsApp.primary,
+              ? Column(
+                  children: [
+                    Center(
+                      child: Text(
+                        "No hay productos disponibles",
+                        style: GoogleFonts.getFont(
+                          'Lato',
+                          fontSize: 24,
+                          color: ColorsApp.primary,
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 )
               : Column(
                   children: [
@@ -319,7 +320,6 @@ class _InventoryState extends State<Inventory> {
                                     )
                                   ],
                                 );
-                                ;
                               },
                             ),
                     ),
@@ -340,7 +340,12 @@ class _InventoryState extends State<Inventory> {
               color: ColorsApp.white,
             ),
             onPressed: () {
-              Navigator.pushNamed(context, '/AddProduct');
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AddProduct(
+                            accountId: "${widget.accountId}",
+                          )));
             }),
       ],
     );
