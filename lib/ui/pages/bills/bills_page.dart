@@ -163,20 +163,17 @@ class _BillsState extends State<Bills> {
                         title: Text('$no',
                         style: GoogleFonts.getFont(
                           'Lato',
-                          fontSize: 16
                         )
                         ),
                         subtitle: Text("$formattedTime",
                         style: GoogleFonts.getFont(
                           'Lato',
-                          fontSize: 24,
                           fontWeight: FontWeight.bold
                         )
                         ),
                         trailing: Text("\$$total",
                         style: GoogleFonts.getFont(
                           'Lato',
-                          fontSize: 24
                         )
                         ),
                         textColor: ColorsApp.primary, 
