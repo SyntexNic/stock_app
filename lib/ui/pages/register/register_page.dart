@@ -103,14 +103,13 @@ class _RegisterState extends State<Register> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Center(
-                  child: Text(
-                    "StockApp",
-                    style: GoogleFonts.getFont(
-                      'Lato',
-                      color: ColorsApp.white,
-                    ),
-                  ),
+                  child: Text("StockUp",
+                      style: GoogleFonts.getFont('Lato',
+                          color: ColorsApp.white, fontSize: 22)),
                 ),
+                Center(
+                  child: Image.asset('images/icon/icon.png', height: 90),
+                )
               ],
             ),
           ),
@@ -123,7 +122,8 @@ class _RegisterState extends State<Register> {
                 Text('Crear Cuenta',
                     style: GoogleFonts.getFont(
                       'Lato',
-                      color: ColorsApp.white,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
                     )),
                 SizedBox(height: screenHeight * .01),
                 SizedBox(height: screenHeight * .05),

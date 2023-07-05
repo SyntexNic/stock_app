@@ -161,12 +161,13 @@ class _Login extends State<Login> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Center(
-                  child: Text("StockApp",
-                      style: GoogleFonts.getFont(
-                        'Lato',
-                        color: ColorsApp.white,
-                      )),
+                  child: Text("StockUp",
+                      style: GoogleFonts.getFont('Lato',
+                          color: ColorsApp.white, fontSize: 22)),
                 ),
+                Center(
+                  child: Image.asset('images/icon/icon.png', height: 90),
+                )
               ],
             ),
           ),
