@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stock_app/Response/Login/LoginResponse.dart';
 import 'package:stock_app/constants/Theme.dart';
+import 'package:stock_app/main.dart';
 import 'package:stock_app/ui/pages/home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -29,7 +30,7 @@ class _Login extends State<Login> {
   bool pc = false;
   Result? account;
   //String? account;
-  String? AccountId = "";
+  String? userId = "";
 
   @override
   void initState() {
@@ -65,19 +66,26 @@ class _Login extends State<Login> {
         final jsonresponse = jsonDecode(response.body);
         final loginResponse = LoginResponse.fromJson(jsonresponse);
 
-        setState(() {
+        setState(() async {
           //account = loginResponse.data?.result ?? [];
           account = loginResponse.data?.result;
 
           if (account!.credentialsCorrect!) {
             final String? accountId = account?.accountId;
             print(accountId);
+            print("--------------------------------------\n\n\n");
 
             //pref.setString('ID', accountId!);
+            String? userId = accountId;
+            await saveUserId(userId!);
+            print(userId);
 
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => HomePage()),
+              MaterialPageRoute(
+                  builder: (context) => HomePage(
+                        userId: userId,
+                      )),
             );
           } else {
             print("accountId is null");
@@ -131,19 +139,6 @@ class _Login extends State<Login> {
         onSubmitted!(email, password);
       }
     }
-  }
-
-  _LoadId() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    setState(() {
-      AccountId = pref.getString('ID');
-      print(AccountId);
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
-    });
   }
 
   @override
@@ -263,7 +258,6 @@ class _Login extends State<Login> {
         fetchAccount();
       } else {
         print("zzzzz");
-        print(AccountId);
       }
     } else {
       // Mostrar mensaje de error

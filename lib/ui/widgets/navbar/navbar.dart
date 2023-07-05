@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stock_app/Response/Login/AccountResponse.dart';
 import 'package:stock_app/constants/Theme.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,7 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:stock_app/ui/pages/bills/bills_page.dart';
 
 class Navbar extends StatefulWidget {
-  const Navbar({super.key});
+  Navbar({Key? key}) : super(key: key);
 
   @override
   State<Navbar> createState() => _NavbarState();
@@ -20,43 +21,15 @@ class _NavbarState extends State<Navbar> {
   @override
   void initState() {
     super.initState();
-    //fetchAccount();
   }
 
-  // Future<void> fetchAccount() async {
-  //   // ignore: prefer_const_declarations
-  //   final url =
-  //       'https://stockapi-vmuc.onrender.com/account/64968cb6367264fca92b90d6';
-  //   final headers = {
-  //     'Content-Type': 'application/json',
-  //     'api-key': '\$yntexNicApiKey23',
-  //   };
-  //   try {
-  //     final response = await http.get(Uri.parse(url), headers: headers);
+  void logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('user_id');
 
-  //     if (response.statusCode == 200) {
-  //       final jsonresponse = jsonDecode(response.body);
-  //       final loginResponse = CreateAccountResponse.fromJson(jsonresponse);
+    Navigator.pushReplacementNamed(context, '/Login');
+  }
 
-  //       setState(() {
-  //         account = loginResponse.data?.result;
-  //         //account = loginResponse.data?.result;
-  //         //AccountId = account?.accountId;
-
-  //         isLoading = false;
-  //         print('Request gg with status: ${response.statusCode}');
-
-  //         print('${account}');
-  //       });
-  //     } else {
-  //       print('Request failed with status: ${response.statusCode}');
-  //     }
-  //   } catch (error) {
-  //     print('Error fetching data: $error');
-  //   }
-  // }
-
-  //https://stockapi-vmuc.onrender.com/account/<cuenta_id>
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -67,32 +40,26 @@ class _NavbarState extends State<Navbar> {
         padding: EdgeInsets.zero,
         children: [
           Center(
-            child: isLoading
-                ? const Center(
-                    child: CircularProgressIndicator(
-                      color: ColorsApp.white,
-                    ),
-                  )
-                : UserAccountsDrawerHeader(
-                    margin: const EdgeInsets.only(left: 105),
-                    accountName: Text('${account?.name}',
-                        style: GoogleFonts.getFont(
-                          'Lato',
-                          color: ColorsApp.white,
-                        )),
-                    accountEmail: Text('${account?.email}',
-                        style: GoogleFonts.getFont(
-                          'Lato',
-                          color: ColorsApp.white,
-                        )),
-                    currentAccountPicture: CircleAvatar(
-                      backgroundColor: const Color.fromARGB(255, 12, 54, 122),
-                      child: ClipOval(
-                        child: Image.asset('images/logo.png'),
-                      ),
-                    ),
-                    decoration: BoxDecoration(color: ColorsApp.primary),
-                  ),
+            child: UserAccountsDrawerHeader(
+              margin: const EdgeInsets.only(left: 105),
+              accountName: Text('${account?.name}',
+                  style: GoogleFonts.getFont(
+                    'Lato',
+                    color: ColorsApp.white,
+                  )),
+              accountEmail: Text('${account?.email}',
+                  style: GoogleFonts.getFont(
+                    'Lato',
+                    color: ColorsApp.white,
+                  )),
+              currentAccountPicture: CircleAvatar(
+                backgroundColor: const Color.fromARGB(255, 12, 54, 122),
+                child: ClipOval(
+                  child: Image.asset('images/logo.png'),
+                ),
+              ),
+              decoration: BoxDecoration(color: ColorsApp.primary),
+            ),
           ),
           Divider(color: ColorsApp.white),
           ListTile(
@@ -139,7 +106,7 @@ class _NavbarState extends State<Navbar> {
                   'Lato',
                   color: ColorsApp.white,
                 )),
-            onTap: () => Navigator.pushNamed(context, '/Login'),
+            onTap: logout,
           ),
         ],
       ),

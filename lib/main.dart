@@ -1,3 +1,4 @@
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stock_app/ui/pages/bussines/bussines.dart';
 import 'package:stock_app/ui/pages/inventory/add_Product_page.dart';
 import 'package:stock_app/ui/pages/inventory/edit_product_page.dart';
@@ -8,21 +9,25 @@ import 'package:flutter/material.dart';
 import 'package:stock_app/ui/pages/inventory/product_detail_page.dart';
 import 'package:stock_app/ui/pages/register/register_page.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  String? userId = await getUserId();
+
+  runApp(MyApp(userId: userId));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final String? userId;
 
-  // This widget is the root of your application.
+  MyApp({required this.userId});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/Login',
+      initialRoute: '/',
       routes: {
-        '/': (context) => const HomePage(),
+        '/': (context) => userId != null ? HomePage(userId: userId!) : Login(),
         '/Login': (context) => const Login(),
         '/Register': (context) => const Register(),
         '/Inventory': (context) => const Inventory(
@@ -35,4 +40,15 @@ class MyApp extends StatelessWidget {
       },
     );
   }
+}
+
+Future<void> saveUserId(String userId) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString('user_id', userId);
+}
+
+// Función para recuperar el ID de usuario de shared_preferences
+Future<String?> getUserId() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('user_id');
 }

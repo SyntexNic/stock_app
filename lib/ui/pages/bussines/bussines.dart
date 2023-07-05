@@ -194,7 +194,7 @@ class _BussinesState extends State<Bussines> {
       _CreateAccount();
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => HomePage()),
+        MaterialPageRoute(builder: (context) => HomePage(userId: '1',)),
       );
     } else {
       // Mostrar mensaje de error

@@ -5,7 +5,9 @@ import 'package:stock_app/constants/Theme.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final String userId;
+
+  const HomePage({super.key, required this.userId});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -17,7 +19,7 @@ class _HomePageState extends State<HomePage> {
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      drawer: const Navbar(),
+      drawer: Navbar(),
       appBar: AppBar(
         title: Container(
           margin: EdgeInsets.only(left: 80),
@@ -41,7 +43,7 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Edumishi",
+                    '${widget.userId}',
                     style: GoogleFonts.getFont(
                       'Lato',
                       fontSize: 24,

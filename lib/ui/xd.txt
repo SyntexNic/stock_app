@@ -1,0 +1,29 @@
+class MyApp extends StatelessWidget {
+  final String? userId;
+
+  MyApp(this.userId);
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return 
+    
+    
+    MaterialApp(
+      debugShowCheckedModeBanner: false,
+      initialRoute: '/Login',
+      routes: {
+        '/': (context) => const HomePage(),
+        '/Login': (context) => const Login(),
+        '/Register': (context) => const Register(),
+        '/Inventory': (context) => const Inventory(
+              accountId: '649f6525660a43f2fc857eb3',
+            ),
+        '/AddProduct': (context) => const AddProduct(),
+        '/DetailsProduct': (context) => const PDetails(),
+        '/EditProduct': (context) => const EditProduct(),
+        '/empresa': (context) => const Bussines(),
+      },
+    );
+  }
+}
