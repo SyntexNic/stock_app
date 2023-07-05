@@ -83,7 +83,7 @@ class _InventoryState extends State<Inventory> {
           : products.isEmpty
               ? Center(
                   child: Text(
-                    "No hay facturas disponibles",
+                    "No hay productos disponibles",
                     style: GoogleFonts.getFont(
                       'Lato',
                       fontSize: 24,

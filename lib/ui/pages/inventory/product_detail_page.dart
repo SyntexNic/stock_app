@@ -17,8 +17,9 @@ class PDetails extends StatefulWidget {
 class _PDetailsState extends State<PDetails> {
   late String id;
   late String AccountId;
+  bool isLoading = true;
+
   Future<void> deleteProduct() async {
-    bool isLoading = true;
     final url = 'https://stockapi-vmuc.onrender.com/product/$id';
     final headers = {
       'Content-Type': 'application/json',

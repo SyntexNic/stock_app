@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stock_app/ui/pages/bills/bills_page.dart';
 import 'package:stock_app/ui/widgets/navbar/navbar.dart';
 import 'package:stock_app/constants/Theme.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -57,7 +58,12 @@ class _HomePageState extends State<HomePage> {
               IconButton(
                 iconSize: 100,
                 onPressed: () {
-                  Navigator.pushNamed(context, '/Inventory');
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Bills(
+                                accountId: "649f6525660a43f2fc857eb3",
+                              )));
                 },
                 icon: const Icon(
                   Icons.receipt_long_outlined,

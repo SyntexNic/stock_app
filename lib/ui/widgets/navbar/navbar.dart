@@ -5,6 +5,7 @@ import 'package:stock_app/Response/Login/AccountResponse.dart';
 import 'package:stock_app/constants/Theme.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:stock_app/ui/pages/bills/bills_page.dart';
 
 class Navbar extends StatefulWidget {
   const Navbar({super.key});
@@ -101,7 +102,14 @@ class _NavbarState extends State<Navbar> {
                   'Lato',
                   color: ColorsApp.white,
                 )),
-            onTap: () => print('Upload tapped'),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Bills(
+                            accountId: "649f6525660a43f2fc857eb3",
+                          )));
+            },
           ),
           Divider(),
           ListTile(
